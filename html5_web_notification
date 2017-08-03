@@ -19,10 +19,18 @@ if (window.Notification) {
                 body: 'Nice to see U!',
                 icon: 'http://image.zhangxinxu.com/image/study/s/s128/mm1.jpg'
             });
-            
             notification.onclick = function() {
                 text.innerHTML = 'Now ' + new Date().toTimeString().split(' ')[0] + ' , we are real friends.';
                 notification.close();    
+            };
+            notification.onshow = function() {
+                console.log('notification shows up'); 
+                setTimeout(function() {  
+                    notification.close();  
+                }, 5000);
+            };
+            notification.onerror = function() {
+                console.log('notification encounters an error'); 
             };
         }    
     };
