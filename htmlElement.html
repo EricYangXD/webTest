@@ -26,16 +26,19 @@
 <body>
     <p>Hello World!</p>
     <greeting>Hello World</greeting>
-    <hello>hello</hello>
+    <hello>自己的话放假啊回复即可</hello>
     <script type="text/javascript">
         function customTagName(tagName, fn) {
             Array.from(document.getElementsByTagName(tagName)).forEach(fn);
         }
-
         function tagHandler(ele) {
             ele.innerHTML = "Tags Html Test!";
         }
+        function changeHi(ele) {
+            ele.innerHTML = "Hello MOTO!";
+        }
         customTagName("greeting", tagHandler);
+        customTagName("hello", changeHi);
     </script>
 </body>
 
