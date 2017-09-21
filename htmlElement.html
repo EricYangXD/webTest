@@ -12,6 +12,13 @@
             font-size: 36px;
             color: red;
             display: block;
+        },
+        hello {
+            font-size: 4em;
+            color: #2323FF;
+            height: 10em;
+            width: 20em;
+            background-color: yellow;
         }
     </style>
 </head>
@@ -19,6 +26,7 @@
 <body>
     <p>Hello World!</p>
     <greeting>Hello World</greeting>
+    <hello>hello</hello>
     <script type="text/javascript">
         function customTagName(tagName, fn) {
             Array.from(document.getElementsByTagName(tagName)).forEach(fn);
