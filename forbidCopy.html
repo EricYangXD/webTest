@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>禁止复制网页上的内容</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<!-- 禁止复制网页上的内容 -->
+
+<body oncontextmenu="return false" onselectstart="return false">
+
+    <!-- <body oncopy="alert('对不起，禁止复制！');return false;"> -->
+
+    <!-- <body oncontextmenu="event.returnValue=false" onselectstart="event.returnValue=false"> -->
+    <div>
+        <p>Try to copy this line.</p>
+        <a href="https://www.baidu.com">Baidu</a>
+    </div>
+    <noscript> 
+        <iframe src="*.htm"></iframe> 
+    </noscript>
+    <script>
+        document.oncontextmenu = function(evt) {
+            evt.preventDefault();
+        }
+        document.onselectstart = function(evt) {
+            evt.preventDefault();
+        };
+        // 禁止复制网页上的内容
+        document.onselectstart = new Function("event.returnValue=false");
+        document.oncontextmenu = new Function("event.returnValue=false");
+    </script>
+
+
+</body>
+
+</html>

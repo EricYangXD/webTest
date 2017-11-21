@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>openCamera and useCamera</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <script lang="javascript" src="./js/jquery.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-latest.js"></script> -->
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <style>
+        #holder {
+            border: 10px dashed #ccc;
+            width: 300px;
+            min-height: 300px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="holder">
+        <img id="idCardImg">
+    </div>
+
+    <progress min="0" max="100" value="30" id="uploadProBar">30</progress>
+    <div id="buttons">
+        <button id="upload">upload</button>
+    </div>
+    <!-- <input type="file" capture="camera" accept="image/*" multiple> -->
+    <input type="file" capture="user" accept="image/*" multiple>
+    <video id="video" autoplay="" style='width:400px;height:400px'></video>
+    <button id='picture'>PICTURE</button>
+    <canvas id="canvas" width="400" height="400"></canvas>
+
+    <script>
+        var isAndroid = (/android/gi).test(navigator.appVersion);
+        var isIOS = (/ipad/gi).test(navigator.appVersion);
+        var isIOS7 = (/OS 7.* like Mac OS X/g).test(navigator.appVersion);
+
+        window.onload = function() {
+            //打开本地相册
+            function openCertLibrary(pageUri) {
+                if (navigator.camera) { //智能终端打开本地相册
+                    var options;
+                    if (isAndroid) {
+                        options = {
+                            quality: 85,
+                            encodingType: navigator.camera.EncodingType.JPEG,
+                            destinationType: 2,
+                            sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+                            saveToPhotoAlbum: true
+                        };
+                    } else {
+                        options = {
+                            quality: 85,
+                            encodingType: navigator.camera.EncodingType.JPEG,
+                            destinationType: navigator.camera.DestinationType.FILE_URI,
+                            sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+                            correctOrientation: true,
+                            saveToPhotoAlbum: false,
+                            targetWidth: 1024,
+                            targetHeight: 768
+                        };
+                    }
+                    navigator.camera.getPicture(function(imageURI) {
+                        uploadCertImgs(imageURI, pageUri);
+                    }, function() {
+                        alert("获取照片失败！");
+                    }, options);
+                } else {
+                    alert("请使用客户端进行此操作！");
+                }
+            }
+
+            //打开摄像头
+            function openCertCamera(pageUri) {
+                if (navigator.camera) { //智能终端打开摄像头
+                    var options = {
+                        quality: isAndroid ? 85 : 100,
+                        encodingType: navigator.camera.EncodingType.JPEG,
+                        destinationType: navigator.camera.DestinationType.FILE_URI,
+                        correctOrientation: true,
+                        saveToPhotoAlbum: true,
+                        targetWidth: 1024,
+                        targetHeight: 768
+                    };
+                    navigator.camera.getPicture(function(imageURI) {
+                        uploadCertImgs(imageURI, pageUri);
+                    }, function() {
+                        alert("获取照片失败!");
+                    }, options);
+                } else {
+                    alert("请使用客户端进行此操作!");
+                }
+            }
+            //另一种打开摄像头/上传方式
+            function openCameraInHtml() {
+                var video = document.getElementById("video");
+                var context = canvas.getContext("2d")
+                var errocb = function() {
+                    console.log('sth wrong!');
+                }
+                if (navigator.getUserMedia) { // 标准的API
+                    navigator.getUserMedia({
+                        "video": true
+                    }, function(stream) {
+                        video.src = stream;
+                        video.play();
+                    }, errocb);
+                } else if (navigator.webkitGetUserMedia) { // WebKit 核心的API
+                    navigator.webkitGetUserMedia({
+                        "video": true
+                    }, function(stream) {
+                        video.src = window.webkitURL.createObjectURL(stream);
+                        video.play();
+                    }, errocb);
+                }
+                document.getElementById("picture").addEventListener("click", function() {
+                    context.drawImage(video, 0, 0, 400, 400);
+                });
+            }
+
+            // 上传照片
+            function uploadCertImgs(imageURI, pageUri) {
+                // 针对Android从相册选取
+                if (imageURI.indexOf('content://') > -1 && imageURI.indexOf('%3A') > -1) {
+                    var photo_split = imageURI.split('%3A');
+                    imageURI = 'content://media/external/images/media/' + photo_split[1];
+                }
+
+                // ios 相册
+                // assets-library://asset/asset.JPG?id=202AB487-38D2-4ACA-B651-C905D24FF676&ext=JPG
+                // ios 拍照
+                // file:///var/mobile/Containers/Data/Application/EC209AC0-4A58-4545-ABE5-3C15112797/tmp/cdv_photo_001.jpg
+                // android 相册 拼接之前
+                // content://com.android.providers.media.documents/document/image%3A45845
+                // android 照片 拼接之后
+                // content://media/external/images/media/45847
+
+                var successFunc = function(r) {
+                    //处理接口返回的数据
+                };
+                var options = new FileUploadOptions();
+                options.fileKey = 'file';
+                options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+                options.mimeType = 'image/jpeg';
+                options.headers = {
+                    Connection: 'close'
+                };
+                options.chunkedMode = false;
+
+                //处理imageURI->imageData
+                imageURI = imageURI.replace("file://localhost/", "file://");
+                resolveFileData(imageURI, function(imageData, file, fileEntry) {
+                    //将照片显示出来
+                    if (imageData) {
+                        $('#idCardImg').attr('src', imageData);
+                    } else {
+                        $('#idCardImg').attr('src', fileEntry.toURL());
+                    }
+                });
+
+                // 将拍摄的照片上传至url，进行识别
+                // var ft = new FileTransfer();
+                // ft.upload(imageURI, url, function(r) {
+                //     successFunc(r);
+                // }, fail, options);
+            }
+            // function fail(error) {
+            //     alert("身份证识别失败！");
+            // }
+
+            //callback:  BASE64  file(用于获取大小等信息)  fileEntry(用于删除)
+            function resolveFileData(imageURI, callback) {
+                window.resolveLocalFileSystemURI(imageURI, function(fileEntry) {
+                    fileEntry.file(function(file) {
+                        var reader = new FileReader();
+                        reader.onload = function(evt) {
+                            if (callback) {
+                                callback.call(window, this.result, file, fileEntry);
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }, failCallback);
+                }, failCallback);
+            }
+
+            function failCallback(error) {
+                alert('照片获取失败!');
+            }
+
+            /**
+             * 格式化日期字符串/日期对象
+             * @param date
+             * @returns 返回格式 '2012-12-12'
+             */
+            function formatterDate(date) {
+                var _d = new Date();
+                if (typeof date == 'object') {
+                    _d = date;
+                } else if (typeof date == 'string') {
+                    _d = parseDate(date);
+                }
+                var y = _d.getFullYear();
+                var m = _d.getMonth() + 1;
+                var d = _d.getDate();
+                return y + '-' + (m < 10 ? ('0' + m) : m) + '-' + (d < 10 ? ('0' + d) : d);
+            }
+
+            function parseDate(dateStr) {
+                if (dateStr == '') {
+                    return null;
+                }
+                var _dateStr = new String(dateStr).replace(/\-/g, '/').replace(/\.\d+$/, '');
+                var date = new Date(_dateStr);
+                if (date.toString() !== 'Invalid Date') {
+                    return date;
+                }
+                return null;
+            }
+
+            function selectUpload() {
+                const mima =
+                    `
+                <button id="addIDPicture" >拍照</button>
+                <button id="uploadBtn" >从相册上传</button>
+                `;
+                document.getElementById("buttons").innerHTML = mima;
+
+                //打开本地相册
+                document.getElementById("uploadBtn").onclick = function() {
+                    openCertLibrary('openCamera.html');
+                };
+                //打开相机
+                document.getElementById("addIDPicture").onclick = function() {
+                    openCertCamera('openCamera.html');
+                };
+
+            }
+
+            //点击弹出选择框
+            document.getElementById("upload").onclick = function() {
+                selectUpload();
+            };
+
+        };
+    </script>
+
+</body>
+
+</html>
