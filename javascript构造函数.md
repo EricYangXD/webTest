@@ -12,7 +12,7 @@
 
     这样，就用对象字面量创建了一个对象o1，它具有一个成员变量p以及一个成员方法alertP。这种写法不需要定义构造函数，因此不在本文的讨论范围之内。这种写法的缺点是，每创建一个新的对象都需要写出完整的定义语句，不便于创建大量相同类型的对象，不利于使用继承等高级特性。
 
-    new表达式是配合构造函数使用的，例如new String(“a string”)，调用内置的String函数构造了一个字符串对象。下面我们用构造函数的方式来重新创建一个实现同样功能的对象，首先是定义构造函数，然后是调用new表达式：
+    new表达式是配合构造函数使用的，例如new String("a string")，调用内置的String函数构造了一个字符串对象。下面我们用构造函数的方式来重新创建一个实现同样功能的对象，首先是定义构造函数，然后是调用new表达式：
 
     function CO(){
         this.p = "I’m in constructed object";
@@ -21,7 +21,7 @@
         }
     }
     var o2 = newCO();
-    
+
     那么，在使用new操作符来调用一个构造函数的时候，发生了什么呢？其实很简单，就发生了四件事：
 
     var obj  ={};
@@ -56,7 +56,7 @@
     }
     var o1 = new C1();
     alert(o1.p);//I’m p in C1
-    
+
     但这种方式并不是值得推荐的方式，因为对象o1的原型是函数C1内部定义的对象o的原型，也就是Object.prototype。这种方式相当于执行了正常new表达式的前三步，而在第四步的时候返回了C1函数的返回值。该方式同样不便于创建大量相同类型的对象，不利于使用继承等高级特性，并且容易造成混乱，应该摒弃。
 
     一个构造函数在某些情况下完全可以作为普通的功能函数来使用，这是JavaScript灵活性的一个体现。下例定义的C2就是一个“多用途”函数：
@@ -75,6 +75,33 @@
     alert(C2(2,3));//5
 
     该函数既可以用作构造函数来构造一个对象，也可以作为普通的函数来使用。用作普通函数时，它接收两个参数，并返回两者的相加的结果。为了代码的可读性和可维护性，建议作为构造函数的函数不要掺杂除构造作用以外的代码；同样的，一般的功能函数也不要用作构造对象。
+
+### 推荐的方式——构造与原型混合模式创建对象 ###
+    我们结合原型模式在共享方法属性以及构造函数模式在实例方法属性方面的优势，使用以下的方法创建对象：
+
+    //我们希望每个stu拥有属于自己的name和age属性
+    function Student(name, age) {
+    this.name = name;
+    this.age = age;
+    }
+
+    //所有的stu应该共享一个alertName()方法
+    Student.prototype = {
+    constructor : Student,
+    alertName : function() {
+                    alert(this.name);
+                }
+    }
+
+    var stu1 = new Student("Jim", 20);
+    var stu2 = new Student("Tom", 21);
+
+    stu1.alertName();  //Jim  实例属性
+    stu2.alertName();  //Tom  实例属性
+
+    alert(stu1.alertName == stu2.alertName);  //true  共享函数
+
+    以上，在构造函数中定义实例属性，在原型中定义共享属性的模式，是目前使用最广泛的方式。通常情况下，我们都会默认使用这种方式来定义引用类型变量。
 
 #### 为什么要使用构造函数 ####
     执行var o2 = new CO();创建对象的时候，发生了四件事情：
@@ -115,7 +142,7 @@
     function f() { this.foo = 1;}
     function s() { this.bar = 2; }
     s.prototype = new f(); // s继承自f
-    
+
     var son = new s(); // 用构造函数s创建一个子类对象
     (son.constructor == s); // false
     (son.constructor == f); // true
@@ -151,3 +178,138 @@
     new Foo.getName();//2  -->运算符优先级，实际执行：new (Foo.getName)()
     new Foo().getName();//3  -->实际执行：(new Foo()).getName()，构造函数返回值问题，在这里返回的是实例化对象，由于构造函数没有为实例化对象添加任何属性，所以从当前对象的原型对象(prototype)中寻找getName
     new new Foo().getName();//3  -->实际执行：new ((new Foo()).getName)()
+
+#### 柯里化 Currying####
+> 柯里化，即Currying，可以使函数变得更加灵活。我们可以一次性传入多个参数调用它；也可以只传入一部分参数来调用它，让它**返回一个函数**去处理剩下的参数。
+
+    var add=function(x){
+        return function(y){
+            return x+y;
+        };
+    };
+    console.log(add(1)(1)); // 输出2
+    var add1=add(1);
+    console.log(add1(1)); // 输出2
+    var add10=add(10);
+    console.log(add10(1)); // 输出11
+
+* 代码中，我们可以一次性传入2个1作为参数add(1)(1)，也可以传入1个参数之后获取add1与add10函数，这样使用起来非常灵活。
+
+#### apply, call与bind方法 ####
+> JavaScript开发者有必要理解apply、call与bind方法的不同点。它们的共同点是第一个参数都是this，即函数运行时依赖的上下文。
+三者之中，call方法是最简单的，它等价于指定this值调用函数：
+
+    var user = {
+        name: "Rahul Mhatre",
+        whatIsYourName: function() {
+            console.log(this.name);
+        }
+    };
+    user.whatIsYourName(); // 输出"Rahul Mhatre",
+    var user2 = {
+        name: "Neha Sampat"
+    };
+    user.whatIsYourName.call(user2); // 输出"Neha Sampat"
+    apply方法与call方法类似。两者唯一的不同点在于，apply方法使用数组指定参数，而call方法每个参数单独需要指定：
+
+    apply(thisArg, [argsArray])
+    call(thisArg, arg1, arg2, …)
+    var user = {
+        greet: "Hello!",
+        greetUser: function(userName) {
+            console.log(this.greet + " " + userName);
+        }
+    };
+    var greet1 = {
+        greet: "Hola"
+    };
+    user.greetUser.call(greet1, "Rahul"); // 输出"Hola Rahul"
+    user.greetUser.apply(greet1, ["Rahul"]); // 输出"Hola Rahul"
+    使用bind方法，可以为函数绑定this值，然后作为一个新的函数返回：
+
+    var user = {
+        greet: "Hello!",
+        greetUser: function(userName) {
+        console.log(this.greet + " " + userName);
+        }
+    };
+    var greetHola = user.greetUser.bind({greet: "Hola"});
+    var greetBonjour = user.greetUser.bind({greet: "Bonjour"});
+    greetHola("Rahul") // 输出"Hola Rahul"
+    greetBonjour("Rahul") // 输出"Bonjour Rahul"
+
+#### Memoization ####
+> Memoization用于优化比较耗时的计算，通过将计算结果缓存到内存中，这样对于同样的输入值，下次只需要中内存中读取结果。
+
+    function memoizeFunction(func){
+        var cache = {};
+        return function(){
+            var key = arguments[0];
+            if (cache[key]){
+                return cache[key];
+            }else{
+                var val = func.apply(this, arguments);
+                cache[key] = val;
+                return val;
+            }
+        };
+    }
+    var fibonacci = memoizeFunction(function(n){
+        return (n === 0 || n === 1) ? n : fibonacci(n - 1) + fibonacci(n - 2);
+    });
+    console.log(fibonacci(100)); // 输出354224848179262000000
+    console.log(fibonacci(100)); // 输出354224848179262000000
+    代码中，第2次计算fibonacci(100)则只需要在内存中直接读取结果。
+
+#### 函数重载 ####
+>所谓函数重载(method overloading)，就是函数名称一样，但是输入输出不一样。或者说，允许某个函数有各种不同输入，根据不同的输入，返回不同的结果。凭直觉，函数重载可以通过if…else或者switch实现，这就不去管它了。jQuery之父John Resig提出了一个非常巧(bian)妙(tai)的方法，利用了闭包。
+> 从效果上来说，people对象的find方法允许3种不同的输入: 0个参数时，返回所有人名；1个参数时，根据firstName查找人名并返回；2个参数时，根据完整的名称查找人名并返回。
+难点在于，people.find只能绑定一个函数，那它为何可以处理3种不同的输入呢？它不可能同时绑定3个函数find0,find1与find2啊！这里的关键在于old属性。
+> 由addMethod函数的调用顺序可知，people.find最终绑定的是find2函数。然而，在绑定find2时，old为find1；同理，绑定find1时，old为find0。3个函数find0,find1与find2就这样通过闭包链接起来了。
+根据addMethod的逻辑，当f.length与arguments.length不匹配时，就会去调用old，直到匹配为止。
+
+    function addMethod(object, name, f){
+        var old = object[name];
+        object[name] = function(){
+            // f.length为函数定义时的参数个数
+            // arguments.length为函数调用时的参数个数
+            if (f.length === arguments.length){
+                return f.apply(this, arguments);
+            }else if (typeof old === "function"){
+                return old.apply(this, arguments);
+            }
+        };
+    }
+    // 不传参数时，返回所有name
+    function find0(){
+        return this.names;
+    }
+    // 传一个参数时，返回firstName匹配的name
+    function find1(firstName){
+        var result = [];
+        for (var i = 0; i < this.names.length; i++){
+            if (this.names[i].indexOf(firstName) === 0){
+                result.push(this.names[i]);
+            }
+        }
+        return result;
+    }
+    // 传两个参数时，返回firstName和lastName都匹配的name
+    function find2(firstName, lastName){
+        var result = [];
+        for (var i = 0; i < this.names.length; i++){
+            if (this.names[i] === (firstName + " " + lastName)){
+                result.push(this.names[i]);
+            }
+        }
+        return result;
+    }
+    var people = {
+        names: ["Dean Edwards", "Alex Russell", "Dean Tom"]
+    };
+    addMethod(people, "find", find0);
+    addMethod(people, "find", find1);
+    addMethod(people, "find", find2);
+    console.log(people.find()); // 输出["Dean Edwards", "Alex Russell", "Dean Tom"]
+    console.log(people.find("Dean")); // 输出["Dean Edwards", "Dean Tom"]
+    console.log(people.find("Dean", "Edwards")); // 输出["Dean Edwards"]

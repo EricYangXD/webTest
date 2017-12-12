@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        /* CSS @supports允许程序员用多种不同的方法来探测当前浏览器是否支持某项CSS样式特征。 */
+        
+        @supports (bottom: constant(safe-area-inset-bottom)) {
+            div {
+                margin-bottom: constant(safe-area-inset-bottom);
+            }
+        }
+        /* @supports标记可以和‘not’关键字组合，用来应对不支持的情况： */
+        
+        @supports not (display: flex) {
+            div {
+                float: left;
+            }
+            /* 替换样式 */
+        }
+        /* 对多个CSS属性的检查可以通过‘or’和‘and’串联起来： */
+        /* or */
+        
+        @supports (display: -webkit-flex) or (display: -moz-flex) or (display: flex) {
+            /* use styles here */
+        }
+        /* and */
+        
+        @supports (display: flex) and (-webkit-appearance: caret) {
+            /* something crazy here */
+        }
+        
+        body {
+            padding-bottom: constant(safe-area-inset-bottom);
+        }
+        
+        .padding_bottom {
+            padding-bottom: constant(safe-area-inset-bottom);
+        }
+        
+        .height_calc {
+            height: (calc(60px) + constant(safe-area-inset-bottom));
+        }
+        
+        .space_bottom {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: constant(safe-area-inset-bottom);
+            background-color: #fff;
+        }
+        /* body {
+            padding: 200px;
+            background: #f3f5f7;
+        } */
+        
+        body {
+            margin: 20px;
+            padding: 0;
+            /* font-size: 0.16rem */
+        }
+        
+        .box,
+         ::selection {
+            width: 2.0rem;
+            height: 2.0rem;
+            background: red;
+        }
+        /* 使用@media设置字体大小 */
+        
+        @media screen and (max-width: 321px) {
+            body {
+                font-size: 16px
+            }
+        }
+        
+        @media screen and (min-width: 321px) and (max-width:400px) {
+            body {
+                font-size: 17px
+            }
+        }
+        
+        @media screen and (min-width: 400px) {
+            body {
+                font-size: 19px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"></div>
+
+    <div class="css_support ">
+        跟CSS的@supports标记相对应的，JavaScript里提供了window.CSS.supports方法。CSS.supports的接口规范提供两种调用方法。第一种方法是使用两个参数：一个是属性名，另一个是属性值： var supportsFlex = CSS.supports("display", "flex");
+
+    </div>
+    <div class="css_support2">
+        第二种用法是简单的提供整个需要分析的样式字串： var supportsFlexAndAppearance = CSS.supports("(display: flex) and (-webkit-appearance: caret)");
+    </div>
+    <div class="css_supportOrNot">
+        <ul>
+            <li>
+                在JavaScript里使用supports方法前，你一定要先检查浏览器是否支持这种功能。
+            </li>
+            <li>
+                var supportsCSS = !!((window.CSS && window.CSS.supports) || window.supportsCSS || false);
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        var scale = 1 / window.devicePixelRatio;
+        document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width,initial-scale=' + scale + ', maximum-scale=' + scale + ', minimum-scale=' + scale + ', user-scalable=no'); //,viewport-fit=cover
+        //做页面的时候文字字体大小不要用rem换算，还是使用px做单位。
+        // 1、拿到设计图，计算出页面的总宽，为了好计算，取100px的font-size，如果设计图是iPhone6的那么计算出的就是7.5rem，如果页面是iPhone5的那么计算出的结果就是6.4rem。
+        //网易：/7.5   手淘：/10   iPhone6   
+        document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+        // 另外，无论是第一种做法还是第二种做法，我们都提到了，文字字体大小是不要换算成rem做单位的，而是使用媒体查询来进行动态设置，比如下面的代码就是网易的代码：
+    </script>
+
+</body>
+
+</html>
