@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8" content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 不缓存页面(为了提高速度一些浏览器会缓存浏览者浏览过的页面,通过下面的定义,浏览器一般不会缓存页面,而且浏览器无法脱机浏览.) -->
+    <meta http-equiv="pragma" content="no-cache" />
+    <!-- expires用于设定网页的过期时间,一旦过期就必须从服务器上重新加载.时间必须使用GMT格式. -->
+    <meta http-equiv="expires" content="Sunday 26 October 2008 01:00 GMT" />
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+
+    <script src="../../js/jquery.js"></script>
+    <script>
+        /*****************************JSONP跨域请求js文件--方法一****************/
+        function jsonpCallback(result) {
+            //所有的操作都要在这个回调函数中进行
+            //跨域请求js文件时，前端回调函数名要与服务器上js文件中的函数名统一
+            //alert(result);
+            // var data = JSON.parse(result); //解析JSON 
+            var data = result;
+            console.info("jsonData", data);
+            localStorage.setItem("jsonData", data);
+            // var seller = data.seller;
+            // var data = result; //.hreftemp
+            var seller = document.getElementsByClassName('seller'); //HTMLcollection动态集合
+            // console.log(typeof seller);
+            console.info("sellerDiv", seller);
+            seller[0].innerHTML = data.seller.name;
+            // alert(data);
+
+        }
+        var JSONP = document.createElement("script");
+        JSONP.type = "text/javascript";
+        JSONP.src = "http://10.182.161.12:8080/ky/login/data.js?callback=jsonpCallback";
+        document.getElementsByTagName("head")[0].appendChild(JSONP);
+
+
+        // jQuery.getJSON("http://10.182.161.12:8080/ky/login/data.json?callback=?", {
+        //     q: "Arsenal"
+        // }, function(results) {
+        //     // Handle response here 
+        //     console.info("Twitter returned: ", results);
+        // });
+    </script>
+</head>
+
+<body>
+    <div class="seller">
+
+
+    </div>
+    <div class="goods">
+
+    </div>
+    <div class="ratings">
+
+    </div>
+</body>
+
+</html>
