@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="utf-8" />
-    <script type="text/javascript" src='build/pdf.js'></script>
+    <script type="text/javascript" src='/build/pdf.js'></script>
     <!-- <script type="text/javascript" src='build/pdf.worker.js'></script> -->
     <style type="text/css">
         html,
@@ -26,10 +26,12 @@
 </head>
 
 <body>
-    <!-- <a href="/web/viewer.html?test.pdf">Open yourpdf.pdf with PDF.js</a> -->
+    <!-- <a href="/web/viewer.html?test.pdf">Open yourpdf.pdf with PDF.js</a> 
+    file:///E:/workspace/webTest/src/pdfjs
+    -->
 </body>
 <script type="text/javascript">
-    PDFJS.getDocument('file:///E:/workspace/webTest/src/pdfjs/web/test.pdf').then(pdf => {
+    PDFJS.getDocument('/web/test.pdf').then(pdf => {
         var numPages = pdf.numPages;
         var start = 1;
         renderPageAsync(pdf, numPages, start);
