@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Flex</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .box {
+            display: flex;
+            /* Safari */
+            display: -webkit-flex;
+            /* flex-direction: row-reverse;
+            flex-wrap: wrap; */
+            flex-flow: nowrap;
+            justify-content: flex-start;
+            /* align-items: flex-start; */
+            /* align-content: space-between; */
+        }
+        
+        .box1 {
+            height: 50px;
+            width: 300px;
+            background: red;
+            text-align: center;
+            align-self: flex-end;
+            /* order: 1; */
+        }
+        
+        .box2 {
+            height: 300px;
+            width: 30px;
+            background: blue;
+            /* order: 2; */
+            /* inline-size: 2rem; */
+        }
+        
+        .box3 {
+            height: 30px;
+            width: 30px;
+            background: green;
+        }
+        
+        .box4 {
+            height: 300px;
+            width: 300px;
+            background: pink;
+        }
+        
+        .box5 {
+            height: 300px;
+            width: 30px;
+            background: purple;
+        }
+        
+        .box6 {
+            /* height: 100px; */
+            /* width: 50px; */
+            background: black;
+            /* flex-grow: 1; */
+            /* flex-basis: 500px */
+            flex: auto;
+        }
+        
+        .touzi {
+            height: 300px;
+            width: 300px;
+            background: yellowgreen;
+            display: flex;
+            /* align-items: flex-start; */
+            align-content: space-between;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .column {
+            flex-basis: 100%;
+            display: flex;
+            /* justify-content: space-between; */
+        }
+        
+        .column:nth-child(1) {
+            justify-content: center;
+        }
+        
+        .column:nth-child(2) {
+            justify-content: space-between;
+        }
+        
+        .column:nth-child(3) {
+            justify-content: center;
+        }
+        
+        .item {
+            background: black;
+            height: 30px;
+            width: 30px;
+        }
+        
+        .item1 {
+            background: black;
+            height: 30px;
+            width: 30px;
+        }
+        
+        .column .item1 {
+            align-items: center;
+            background: red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="touzi" id="box">
+        <div class="column">
+
+            <div class="item"></div>
+            <!-- <div class="item"></div>
+            <div class="item"></div> -->
+        </div>
+
+        <div class="column">
+
+            <div class="item"></div>
+            <div class="item"></div>
+            <div class="item"></div>
+        </div>
+        <div class="column">
+
+            <!-- <div class="item1"></div> -->
+            <!-- <div class="item1"></div> -->
+            <div class="item">
+                <!-- 1-65535正则pattern /^[1-9][0-9]{0,3}$|(^[1-5][0-9]{4}$)|(^[6][0-4][0-9]{3}$)|(^[6][5][0-4][0-9]{2}$)|(^[6][5][5][0-2][0-9]$)|(^[6][5][5][3][0-5]$)/.test(65535) -->
+            </div>
+        </div>
+        <!-- <div class="item"></div> -->
+
+        <!-- <div class="box1">box1</div>
+        <div class="box2">box2</div>
+        <div class="box3">box3</div>
+        <div class="box4">box4</div>
+        <div class="box5">box5</div>
+        <div class="box6">box6box6box6box6</div> -->
+    </div>
+</body>
+
+</html>

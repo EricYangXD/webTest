@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>垂直居中</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" href="./demo.css"> -->
+
+    <!-- <script src="http://code.jquery.com/jquery-1.4.1.min.js"></script> -->
+    <style>
+        /* .wrapper {
+            text-align: center;
+            display: table-cell;
+            vertical-align: middle;
+        }
+        
+        .content {
+            display: inline-block;
+            background: #fff;
+        } */
+        
+        .main {
+            position: relative;
+        }
+        
+        .clickBtn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        #box {
+            height: 400px;
+            background: #c00;
+        }
+        
+        #content,
+        #actor {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        #content {
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        #actor {
+            height: 400px;
+            font-size: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div class="wrapper">
+        <div class="content">
+            content
+        </div>
+    </div>-->
+
+    <div id="box">
+        <div id="content">我是内容<br />我也是内容</div>
+        <div id="actor">我是演员</div>
+    </div>
+
+    <div class="main">
+        <div class="clickBtn">
+            Click here to view your PDF file.
+        </div>
+
+    </div>
+
+
+
+    <!-- <div class="dc3-1">
+        <h4 class="a-sh" shb="d3-1">1、inline-block + table-cell + text-align + vertical-align</h4>
+        <pre class="d3-1">
+            .parent{
+                text-align: center;
+                display: table-cell;
+                vertical-align: middle;
+            }
+            .child{
+                display: inline-block;
+            }</pre>
+        <div class="demo3">
+            <div class="parent" style="text-align: center;display: table-cell;vertical-align: middle;">
+                <div class="child" style="display: inline-block;">DEMO</div>
+            </div>
+        </div>
+    </div> -->
+</body>
+
+</html>
