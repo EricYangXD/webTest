@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script>
+        // method 1
+        if (window.history && window.history.pushState) {
+            window.addEventListener('popstate', function() {
+                var hashLocation = location.hash;
+                var hashSplit = hashLocation.split("#!/");
+                var hashName = hashSplit[1];
+                if (hashName !== '') {
+                    var hash = window.location.hash;
+                    if (hash === '') {
+                        alert('pressed backward button');
+                    }
+                }
+            });
+            window.history.pushState('forward', null, './#forward');
+        }
+
+        // method 2.1
+        // JavaScript没有监听物理返回键的API，所以只能使用 popstate 事件监听。
+        // 有两个解决办法：
+        // 1、返回到指定的页面
+        pushHistory();
+        window.addEventListener("popstate", function(e) {
+            window.location = 'http://www.baidu.com';
+        }, false);
+
+        function pushHistory() {
+            var state = {
+                title: "title",
+                url: "#"
+            };
+            window.history.pushState(state, "title", "#");
+        }
+
+        // method 2.2
+        // 2、js文件方法
+        // 此声明函数在xback.js文件里有，在app.js里必须再声明一次，不然监听返回事件失败
+        /**
+        * 使用 HTML5 的 History 新 API pushState 来曲线监听 Android 设备的返回按钮
+        *   XBack.listen(function(){
+                alert('oh! you press the back button');
+            });
+        **/
+        ;
+        ! function(pkg, undefined) {
+            var STATE = 'x-back';
+            var element;
+            var onPopState = function(event) {
+                event.state === STATE && fire();
+            }
+            var record = function(state) {
+                history.pushState(state, null, location.href);
+            }
+            var fire = function() {
+                var event = document.createEvent('Events');
+                event.initEvent(STATE, false, false);
+                element.dispatchEvent(event);
+            }
+            var listen = function(listener) {
+                element.addEventListener(STATE, listener, false);
+            };
+            ! function() {
+                element = document.createElement('span');
+                window.addEventListener('popstate', onPopState);
+                this.listen = listen;
+                record(STATE);
+            }.call(window[pkg] = window[pkg] || {});
+        }('XBack');
+        // 调用方法：
+        XBack.listen(function() {
+            alert('back');
+        });
+    </script>
+</head>
+
+<body>
+    <input type="button" value="行不行">
+</body>
+
+</html>
