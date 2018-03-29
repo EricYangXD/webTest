@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style type="text/css">
+        #content {
+            width: 600px;
+            height: 300px;
+            border: 1px solid #ddd;
+            overflow: auto;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="file" name="" id="myFile" value="" multiple="multiple" />
+</body>
+<div id="content"></div>
+
+</html>
+<script type="text/javascript">
+    window.onload = function() {
+        var oFile = document.getElementById("myFile");
+        var oCotnent = document.getElementById("content");
+        oFile.addEventListener("change", function(ev) {
+            var event = ev || window.event;
+            var files = this.files;
+            for (var i = 0, len = files.length; i < len; i++) {
+                var reader = new FileReader();
+                var file = files[i];
+                reader.onload = (function(file) {
+                    return function(e) {
+                        var div = document.createElement('div');
+                        div.innerHTML = this.result;
+                        oCotnent.insertBefore(div, null);
+                    };
+                })(file);
+                //读取文件内容
+                reader.readAsText(file, "utf-8");
+            }
+        }, false);
+    }
+</script>

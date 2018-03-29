@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style type="text/css">
+        #area {
+            width: 100%;
+            height: 200px;
+            line-height: 200px;
+            text-align: center;
+            border: 1px solid #DDDDDD;
+        }
+        
+        #prev {
+            width: 100%;
+            min-height: 400px;
+            border: 1px solid #FF0000;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="area">将图片拖放到该区域</div>
+    <h1>图片预览</h1>
+    <hr />
+    <div id="prev">此处显示图片预览</div>
+    <div style="visibility:hidden;width:300px;height:300px;background:rgb(255, 0, 0);">visibility
+        <div style="visibility:visible;width:300px;height:300px;background:rgb(238, 255, 0);">visibility-c</div>
+    </div>
+    <div style="display:none;width:300px;height:300px;background:rgb(68, 0, 255);">display
+        <div style="visibility:visible;width:300px;height:300px;background:rgb(0, 255, 13);">display-c</div>
+    </div>
+    <div style="visibility:visible;width:300px;height:300px;background:rgb(244, 244, 247);"></div>
+</body>
+
+</html>
+<script type="text/javascript">
+    window.onload = function() {
+        let oArea = document.getElementById("area");
+        let oPrev = document.getElementById("prev");
+
+        oArea.ondragenter = () => {
+            oArea.innerHTML = "请释放鼠标";
+        }
+        oArea.ondragleave = () => {
+            oArea.innerHTML = "将图片拖放到该区域";
+        }
+        oArea.ondragover = (ev) => {
+            ev.preventDefault();
+        }
+        oArea.ondrop = (ev) => {
+            ev.preventDefault();
+            let files = ev.dataTransfer.files;
+            for (let file of files) {
+                let reader = new FileReader();
+                reader.readAsDataURL(file);
+                ((reader) => {
+                    reader.onload = () => {
+                        let oImg = document.createElement("img");
+                        oImg.src = this.result;
+                        oPrev.appendChild(oImg);
+                    }
+                })(reader);
+            }
+        }
+    }
+</script>

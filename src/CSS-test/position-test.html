@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div {
+            background: #0094ff;
+            width: 250px;
+            height: 100px;
+            border: 10px solid #ff6a00;
+        }
+        
+        .relative {
+            background: #4cf03d;
+            position: relative;
+            width: 200px;
+            height: 100px;
+            top: 20px;
+            left: 50px;
+            margin: 10px;
+            padding: 5px;
+        }
+        
+        .absolute {
+            background: #988c8c;
+            position: ;
+            width: 200px;
+            height: 100px;
+            top: 20px;
+            left: 50px;
+            margin: 10px;
+            padding: 5px;
+            /* align-items: center; */
+            /* justify-content: center; */
+            /* justify-items: inherit; */
+            /* align-content: center; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="absolute">
+        相对于初始包含块定位
+    </div>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="relative">
+        <div class="absolute">
+            相对于最近relative祖先元素定位
+        </div>
+    </div>
+</body>
+
+</html>

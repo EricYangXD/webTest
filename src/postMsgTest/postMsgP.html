@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <a target="_blank" href="postMsgC1.html">
+            <button id="boy">男生点这个</button>
+            <button id="girl">女生点这个</button>
+        </a>
+    </div>
+    <script>
+        var message = '';
+        // window.open('https://www.baidu.com');//新开窗口
+        // window.open(URL,name,features,replace);//可以实现页面间通信
+        // window.location.replace('https://www.baidu.com');//
+        // window.location='https://www.baidu.com';//原窗口跳转
+        // window.navigator.geolocation.getCurrentPosition()
+        document.querySelector("#boy").onclick = function() {
+            message = '我是男生，帅气的男生！';
+        };
+        document.querySelector("#girl").onclick = function() {
+            message = '我是女生，漂亮的女生！';
+        };
+        window.addEventListener('message', function(e) {
+            var interval;
+            // 检测来源
+            if (e.origin) {
+                switch (e.data) {
+                    case 'ready':
+                        // e.source 为发送的 window 对象
+                        interval = setTimeout(function(win) {
+                            win.postMessage(message, '*');
+                        }, 2000, e.source);
+                        break;
+
+                    case 'closed':
+                        clearInterval(interval);
+                        break;
+                }
+            }
+        }, false);
+    </script>
+</body>
+
+</html>
