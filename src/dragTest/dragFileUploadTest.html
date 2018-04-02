@@ -26,46 +26,71 @@
 <body>
     <div id="area">将图片拖放到该区域</div>
     <h1>图片预览</h1>
-    <hr />
+    <hr/>
     <div id="prev">此处显示图片预览</div>
+    <hr/>
+    <div>display:none和visibility:hidden的区别：<br> display:none会使所有子元素不可见，不在文档中渲染
+        <br> visibility:hidden会在文档中渲染占位，若子元素设置visibility:visible，则子元素可见。
+    </div>
     <div style="visibility:hidden;width:300px;height:300px;background:rgb(255, 0, 0);">visibility
         <div style="visibility:visible;width:300px;height:300px;background:rgb(238, 255, 0);">visibility-c</div>
     </div>
     <div style="display:none;width:300px;height:300px;background:rgb(68, 0, 255);">display
         <div style="visibility:visible;width:300px;height:300px;background:rgb(0, 255, 13);">display-c</div>
     </div>
-    <div style="visibility:visible;width:300px;height:300px;background:rgb(244, 244, 247);"></div>
+    <div style="visibility:visible;width:300px;height:300px;background:rgb(244, 244, 247);">
+    </div>
 </body>
 
-</html>
 <script type="text/javascript">
     window.onload = function() {
-        let oArea = document.getElementById("area");
-        let oPrev = document.getElementById("prev");
+        var oArea = document.getElementById("area");
+        var oPrev = document.getElementById("prev");
 
-        oArea.ondragenter = () => {
+        oArea.ondragenter = function() {
             oArea.innerHTML = "请释放鼠标";
         }
-        oArea.ondragleave = () => {
+        oArea.ondragleave = function() {
             oArea.innerHTML = "将图片拖放到该区域";
         }
-        oArea.ondragover = (ev) => {
-            ev.preventDefault();
+        oArea.ondragover = function(e) {
+            // 阻止ondragover的默认行为！----当ondragover触发时，ondrop会失效!
+            e.preventDefault();
         }
-        oArea.ondrop = (ev) => {
+        oArea.ondrop = function(ev) {
             ev.preventDefault();
-            let files = ev.dataTransfer.files;
-            for (let file of files) {
-                let reader = new FileReader();
+            //HTML5为所有的拖动相关事件提供了一个新的属性：e.dataTransfer { }//数据传递对象
+            // 功能：用于在源对象和目标对象的事件间传递数据
+            var files = ev.dataTransfer.files;
+
+            for (var file of files) {
+                var reader = new FileReader();
                 reader.readAsDataURL(file);
-                ((reader) => {
-                    reader.onload = () => {
-                        let oImg = document.createElement("img");
+                (function(reader) {
+                    reader.onload = function() {
+                        var oImg = document.createElement("img");
                         oImg.src = this.result;
                         oPrev.appendChild(oImg);
                     }
                 })(reader);
             }
         }
+
+        // HTML5新增的文件操作对象：
+        // File： 代表一个文件对象
+        // FileList： 代表一个文件列表对象，类数组
+        // FileReader：用于从文件中读取数据
+        // FileWriter：用于向文件中写出数据
+        // 相关函数：
+        // div.ondrop = function(e) {
+        //     var f = e.dataTransfer.files[0]; //找到拖放的文件
+        //     var fr = new FileReader(); //创建文件读取器
+        //     fr.readAsURLData(f); //读取文件内容
+        //     fr.onload = function() { //读取完成
+        //         img.src = fr.result; //使用读取到的数据
+        //     }
+        // }
     }
 </script>
+
+</html>
