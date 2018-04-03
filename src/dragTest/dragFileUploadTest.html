@@ -61,18 +61,35 @@
             ev.preventDefault();
             //HTML5为所有的拖动相关事件提供了一个新的属性：e.dataTransfer { }//数据传递对象
             // 功能：用于在源对象和目标对象的事件间传递数据
-            var files = ev.dataTransfer.files;
-
+            var files = ev.dataTransfer.files; //找到拖放的文件
             for (var file of files) {
-                var reader = new FileReader();
-                reader.readAsDataURL(file);
-                (function(reader) {
-                    reader.onload = function() {
-                        var oImg = document.createElement("img");
-                        oImg.src = this.result;
-                        oPrev.appendChild(oImg);
-                    }
-                })(reader);
+                var reader = new FileReader(); //创建文件读取器
+                console.log(reader);
+                console.log(file.name); //打印图片名称
+                if (!/image\/\w+/.test(file.type)) {
+                    alert(file.name + "不是图片文件！");
+                    return;
+                }
+                reader.readAsDataURL(file); //读取文件内容
+                //reader.readAsText(file); //从文件中读取文本字符串
+                // readAsArrayBuffer
+                // readAsBinaryString
+                showPicture(reader);
+            }
+        }
+
+        function showPicture(reader) {
+            reader.onload = function() {
+                // method 1:
+                // var oImg = document.createElement("img");
+                // oImg.src = this.result;
+                // oPrev.appendChild(oImg);
+                // method 2:
+                // console.log('读取文件完成')
+                // console.log(reader.result);
+                var img = new Image();
+                img.src = reader.result; //URL数据  
+                oPrev.appendChild(img);
             }
         }
 
@@ -85,7 +102,7 @@
         // div.ondrop = function(e) {
         //     var f = e.dataTransfer.files[0]; //找到拖放的文件
         //     var fr = new FileReader(); //创建文件读取器
-        //     fr.readAsURLData(f); //读取文件内容
+        //     fr.readAsDataURL(f); //读取文件内容
         //     fr.onload = function() { //读取完成
         //         img.src = fr.result; //使用读取到的数据
         //     }
