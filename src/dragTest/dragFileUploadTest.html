@@ -74,11 +74,11 @@
                 //reader.readAsText(file); //从文件中读取文本字符串
                 // readAsArrayBuffer
                 // readAsBinaryString
-                showPicture(reader);
+                showPicture(reader, file, oPrev);
             }
         }
 
-        function showPicture(reader) {
+        function showPicture(reader, file, oPrev) {
             reader.onload = function() {
                 // method 1:
                 // var oImg = document.createElement("img");
@@ -87,6 +87,7 @@
                 // method 2:
                 // console.log('读取文件完成')
                 // console.log(reader.result);
+                oPrev.innerHTML += ` : ${file.name} `; //打印图片名称
                 var img = new Image();
                 img.src = reader.result; //URL数据  
                 oPrev.appendChild(img);
