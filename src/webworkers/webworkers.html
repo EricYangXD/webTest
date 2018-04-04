@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="support"></div>
+    <script>
+        (function testWorker() {
+            if (typeof(Worker) !== "undefined") {
+                document.getElementById("support").innerHTML = "doesn't support web workers...";
+            }
+        })();
+        importScripts("worker.js", "worker1.js", "worker2.js");
+        var worker = new Worker("worker.js");
+        worker.onmessage = function(event) {
+            console.log(event.data);
+        }
+        worker.postMessage(message);
+        var message = {};
+    </script>
+</body>
+
+</html>
