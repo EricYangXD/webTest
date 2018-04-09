@@ -5,24 +5,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        // web workers没有访问document对象的权限
+        // importScripts()是全局函数，可将脚本或库导入到他们的作用域中，导入的js文件只会在某个已有的worker中加载和执行，导入多个脚本时按顺序执行。
+        // importScripts("worker.js", "worker1.js", "worker2.js");
+        //创建和运行worker进程
+        var worker = new Worker("worker.js");
+        var message = "Hello world!";
+        worker.postMessage(message, '*');
+        //设置worker的onmassage属性，绑定指定的事件处理程序
+        worker.onmessage = function(event) {
+            document.getElementById("reMsg").innerHTML = event.data;
+            console.log(event.data);
+        };
+
+
+
+
+        // 与webworker通信
+        document.getElementById("helloButton").onclick = function() {
+            worker.postMessage("Hi, this is Hello Button");
+        }
+
+        // 结束一个worker进程，webworker进程不能自动结束，但能被启用他们的页面终止，终止后不能重新启动，只能新建一个。
+        // cworker.terminate();
+        // myWorker.terminate();
+    </script>
+    <!-- <script src="worker.js"></script> -->
     <title>Document</title>
 </head>
 
 <body>
     <div id="support"></div>
+    <div id="reMsg"></div>
+    <button id="helloButton">Hello Button</button>
+
+
     <script>
         (function testWorker() {
-            if (typeof(Worker) !== "undefined") {
-                document.getElementById("support").innerHTML = "doesn't support web workers...";
+            if (typeof(Worker) == "function") {
+                document.getElementById("support").innerHTML = "support web workers...";
             }
         })();
-        importScripts("worker.js", "worker1.js", "worker2.js");
-        var worker = new Worker("worker.js");
-        worker.onmessage = function(event) {
-            console.log(event.data);
-        }
-        worker.postMessage(message);
-        var message = {};
     </script>
 </body>
 

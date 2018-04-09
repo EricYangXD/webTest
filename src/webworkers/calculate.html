@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script>
+        var worker = new Worker("SumCalculate.js");
+        worker.onmessage = function(event) {
+            alert("sum:" + event.data + ".");
+
+        };
+
+        function calculate() {
+            var num = parseInt(document.getElementById("num").value, 10);
+            worker.postMessage(num);
+        }
+    </script>
+    <title>Calculate</title>
+</head>
+
+<body>
+    <div>
+        input number: <input type="text" name="num" id="num" placeholder="input a number">
+        <button onclick="calculate()">calculate</button>
+    </div>
+</body>
+
+</html>
