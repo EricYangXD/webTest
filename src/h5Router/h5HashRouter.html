@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hash Router</title>
+</head>
+
+<body>
+    <ul>
+        <li><a href="#/">turn yellow</a></li>
+        <li><a href="#/blue">turn blue</a></li>
+        <li><a href="#/green">turn green</a></li>
+    </ul>
+
+    <script>
+        /* 
+                @前端路由的实现原理
+
+                1.基于hash的前端路由实现
+                2.基于hash的前端路由升级
+                3.基于H5 History的前端路由实现
+
+                前端路由是现代SPA应用必备的功能,每个现代前端框架都有对应的实现,例如vue-router、react-router。
+                我们不想探究vue-router或者react-router们的实现，因为不管是哪种路由无外乎用兼容性更好的hash实现或者是H5 History实现，与框架几个只需要做相应的封装即可。
+                */
+
+        /* 
+        1.hash路由
+        hash路由一个明显的标志是带有#,我们主要是通过监听url中的hash变化来进行路由跳转。
+        hash的优势就是兼容性更好,在老版IE中都有运行,问题在于url中一直存在#不够美观,而且hash路由更像是Hack而非标准,相信随着发展更加标准化的History API会逐步蚕食掉hash路由的市场。
+        */
+
+        class Routers {
+            constructor() {
+                this.routes = {};
+                this.currentUrl = '';
+                this.history = [];
+                this.currentIndex = this.history.length - 1;
+                this.refresh = this.refresh.bind(this);
+                this.backOff = this.backOff.bind(this);
+                this.isBack = false;
+                window.addEventListener('load', this.refresh, false);
+                window.addEventListener('hashchange', this.refresh, false);
+            }
+
+            route(path, callback) {
+                this.routes[path] = callback || function() {};
+            }
+
+            refresh() {
+                this.currentUrl = location.hash.slice(1) || '/';
+                if (!this.isBack) {
+                    if (this.currentIndex < this.history.length - 1) {
+                        this.history = this.history.slice(0, this.currentIndex + 1);
+                    }
+                    this.history.push(this.currentUrl);
+                    this.currentIndex++;
+                }
+                this.routes[this.currentUrl]();
+                console.log('指针:', this.currentIndex, 'history:', this.history);
+                this.isBack = false;
+            }
+
+            backOff() {
+                this.isBack = true;
+                this.currentIndex <= 0 ? (this.currentIndex = 0) : (this.currentIndex -= 1);
+                location.hash = `#${this.history[this.currentIndex]}`;
+                this.routes[this.history[this.currentIndex]]();
+            }
+        }
+
+        window.Router = new Routers();
+        var content = document.querySelector('body');
+        // change Page anything
+        function changeBgColor(color) {
+            content.style.backgroundColor = color;
+        }
+        Router.route('/', function() {
+            changeBgColor('yellow');
+        });
+        Router.route('/blue', function() {
+            changeBgColor('blue');
+        });
+        Router.route('/green', function() {
+            changeBgColor('green');
+        });
+    </script>
+
+
+
+
+</body>
+
+</html>

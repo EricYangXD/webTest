@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #floater {
+            float: left;
+            height: 50%;
+            margin-bottom: -120px;
+        }
+        
+        #top {
+            float: right;
+            width: 100%;
+            text-align: center;
+            background: green;
+        }
+        
+        #content {
+            /* clear: both;
+            height: 240px;
+            position: relative;
+            text-align: center;
+            vertical-align: middle; */
+            position: absolute;
+            top: 50%;
+            height: 240px;
+            margin-top: -120px;
+            /* negative half of the height */
+            background: yellow;
+        }
+        
+        #wrapper {
+            display: table;
+        }
+        
+        #cell {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        
+        .container {
+            /*height:100px;height不设就行，默认是line-height的高*/
+            line-height: 100px;
+            background: yellow;
+            text-align: center;
+        }
+        
+        table td {
+            height: 300px;
+            background: #ccc;
+            padding: 0;
+        }
+        
+        #container {
+            width: 600px;
+            border: 2px solid blue;
+            height: 250px;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <div id="wrapper">
+        <div id="cell">
+            <div class="content">Content goes here</div>
+        </div>
+    </div> -->
+    <div class="container">
+        hi,imooc!
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <td class="wrap">
+                    <div>
+                        <div>看我是否可以居中。</div>
+                        <div>看我是否可以居中。</div>
+                        <div>看我是否可以居中。</div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="container">
+        <span id="child">aaaaaaaaaaaa我我我</span>
+        <img src="灾备堡垒机.jpg" width="100px" height="100px" />
+        <img src="灾备堡垒机.jpg" width="120px" height="120px" />
+        <img src="灾备堡垒机.jpg" width="80px" height="80px" />
+        <img src="灾备堡垒机.jpg" width="110px" height="110px" />
+    </div>
+
+</body>
+
+</html>
