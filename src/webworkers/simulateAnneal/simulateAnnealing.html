@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="main.js"></script>
+    <script src="canvas.js"></script>
+    <script src="ground.js"></script>
+    <script src="points.js"></script>
+    <script src="annealing.js"></script>
+    <style type="text/css">
+        body {
+            background: black;
+            color: #CCCCCC;
+        }
+        
+        canvas {
+            background: black;
+        }
+        
+        canvas:hover {
+            background: #444444;
+        }
+        
+        div {
+            float: left;
+            border: 1px solid #444444;
+            padding: 3px;
+            margin: 3px;
+            background: #3B3B3B;
+        }
+        
+        label {
+            display: block;
+            clear: both;
+        }
+        
+        label>input {
+            width: 3em;
+            float: right;
+        }
+        
+        .args {
+            width: 100px;
+        }
+        
+        #gobutton {
+            display: none;
+        }
+    </style>
+    <title>Simulated annealing</title>
+</head>
+
+<body onload="controls.doLoad()">
+    <h1>Simulated annealing</h1>
+    <div id="args">
+        <h2>Args:</h2>
+        <label for="worker">Worker
+            <input type="checkbox" name="worker" id="worker" />
+        </label>
+        <input type="button" value="go" onclick="controls.go()" />
+    </div>
+    <div id="groundContainer"></div>
+</body>
+
+</html>
