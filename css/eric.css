@@ -1,0 +1,32 @@
+.box {
+  color: #8a00ff;
+  font-size: 16px;
+  height: 200px;
+  width: 300px;
+  margin-bottom: 10px;
+  border: red solid;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+nav li {
+  display: inline-block;
+}
+nav a {
+  display: block;
+  padding: 6px 12px;
+  text-decoration: none;
+  color: red;
+}
+header nav a {
+  color: green;
+}
+
+body {
+  line-height: 2;
+}
+
+/*# sourceMappingURL=eric.css.map */

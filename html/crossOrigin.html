@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<meta charset="utf-8" content="text/html" http-equiv="content-type">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../css/eric.css">
+    <script src="jquery-3.2.1.min.js"></script>
+    <script>
+        //script可以跨域
+        //需要跨域的时候可以创建一个script标签
+        var jsonp = document.createElement("script");
+        //指定类型
+        jsonp.type = "text/javascript";
+        //添加链接地址
+        // jsonp.src = "http://kayantest.cpic.com.cn/ky/login/userurl.js?jsonpCallback";
+        jsonp.src = "http://kayantest.cpic.com.cn/ky/manage/data/cardList.json?jsonpCallback";
+        // jsonp.src = "http://10.0.154.249/text.js?callback=jsonpCallback";
+        //将这个拼接 好的script标签添加到head标签中。
+        document.getElementsByTagName("head")[0].appendChild(jsonp);
+        //回调函数
+        function jsonpCallback(hreftemp) {
+            alert(hreftemp);
+            var data = result;
+            alert(data);
+        }
+    </script>
+
+    <!-- 如果你的页面使用jquery，那么通过它封装的方法就能很方便的来进行jsonp操作了。 -->
+    <!-- <script>
+        $.getJSON("http://kayantest.cpic.com.cn/ky/login/userurl.js?callback=?", function(ret) {
+            alert(ret);
+        })
+    </script> -->
+
+    <title>Test CrossOrigin</title>
+</head>
+
+<body>
+    <!-- <header> -->
+    <div class="box">
+        Hello SASS!
+    </div>
+    <nav>
+        <ul>
+            <li>A</li>
+            <li>S</li>
+            <li>D<a href="#">hhhhhh</a></li>
+        </ul>
+    </nav>
+    <!-- </header> -->
+    <footer>
+        <ul>
+            <li>A</li>
+            <li>S</li>
+            <li>D</li>
+        </ul>
+    </footer>
+</body>
+
+</html>

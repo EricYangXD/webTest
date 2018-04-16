@@ -1,0 +1,42 @@
+$color: #8a00ff;
+$font-size: 16px;
+$height: 200px;
+$width: 300px;
+$margin-bottom: 10px;
+.box{
+	color: $color;
+	font-size: $font-size;
+	height: $height;
+	width: $width;
+	margin-bottom: $margin-bottom;
+	border: red solid;
+}
+nav{
+	ul{
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	li{
+		display: inline-block;
+	}
+	a{
+		display: block;
+		padding: 6px 12px;
+		text-decoration: none;
+
+		color: red;
+		header & {
+			color:green;
+		}
+	}
+}
+$brand-primary : darken(#428bca, 6.5%) !default; // #337ab7
+$btn-primary-color : #fff !default;
+$btn-primary-bg : $brand-primary !default;
+$btn-primary-border : darken($btn-primary-bg, 5%) !default;
+$baseLineHeight: 2;
+$baseLineHeight: 1.5 !default;
+body{
+	line-height: $baseLineHeight;
+}
