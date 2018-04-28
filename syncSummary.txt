@@ -1,0 +1,54 @@
+CODE SETTINGS SYNC UPLOAD SUMMARY
+Version: 2.9.0
+--------------------
+GitHub Token: 6e2e36438385eae2d9edfbfb052359e0cfa0a030
+GitHub Gist: ea2736046423788bc58c51b0ceff852d
+GitHub Gist Type: Secret
+
+Restarting Visual Studio Code may be required to apply color and file icon theme.
+--------------------
+Files Uploaded:
+  vue-html.json > snippets|vue-html.json
+  vue.json > snippets|vue.json
+
+  Extensions Removed:
+
+Extensions Added:
+  auto-close-tag v0.5.6
+  auto-rename-tag v0.0.15
+  beautify v1.3.0
+  code-runner v0.9.3
+  code-settings-sync v2.9.0
+  debugger-for-chrome v4.3.0
+  html-snippets v0.2.1
+  java v0.22.0
+  JavaScriptSnippets v1.6.0
+  jquerysnippets v0.0.1
+  json-tools v1.0.2
+  MagicPython v1.0.12
+  mssql v1.3.1
+  npm-intellisense v1.3.0
+  open-html-in-browser v0.1.21
+  open-in-browser v1.1.0
+  partial-diff v1.1.0
+  path-intellisense v1.4.2
+  prettier-vscode v1.2.2
+  python v0.2.3
+  python v2018.3.1
+  tslint v1.0.28
+  vetur v0.11.7
+  vscode-auto-open-markdown-preview v0.0.4
+  vscode-html-css v0.2.0
+  vscode-java-debug v0.9.0
+  vscode-java-pack v0.3.0
+  vscode-java-test v0.5.0
+  vscode-JS-CSS-HTML-formatter v0.2.3
+  vscode-markdownlint v0.15.0
+  vscode-maven v0.7.0
+  vscode-npm v3.3.0
+  vscode-npm-script v0.3.3
+  vscode-sql-beautify v0.0.4
+  vue-snippets v0.1.5
+  xml v1.9.2
+--------------------
+Done.
