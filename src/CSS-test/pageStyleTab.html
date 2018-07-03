@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
+    <!-- <script src="main.js"></script> -->
+    <style lang="css">
+        body {
+            margin: 0;
+            font-family: "微软雅黑", "Microsoft yahei", "Hiragino Sans GB W3";
+            display: block;
+        }
+        
+        .header-container {
+            position: fixed;
+            top: 0;
+            z-index: 10;
+            width: 100%;
+            height: 40px;
+            background-color: #0058AD;
+            line-height: 40px;
+        }
+        
+        .header-container .header-title {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            line-height: 40px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: normal;
+            color: #fff;
+        }
+        
+        .footer-container {
+            position: fixed;
+            bottom: 0;
+            z-index: 10;
+            width: 100%;
+            background-color: #fff;
+        }
+        
+        .footer-container .tool-icon-list {
+            padding: 8px 0;
+            zoom: 1;
+            display: flex;
+        }
+        
+        footer ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        footer ul li {
+            flex: 1;
+            text-align: center;
+        }
+        
+        #content {
+            width: 100%;
+            height: 200px;
+            margin-top: 42px;
+        }
+        
+        #tab_bar {
+            width: 100%;
+            height: 20px;
+            float: left;
+        }
+        
+        #tab_bar ul {
+            padding: 0px;
+            margin: 0px;
+            height: 20px;
+            text-align: center;
+        }
+        
+        #tab_bar li {
+            list-style-type: none;
+            float: left;
+            width: 133.3px;
+            height: 20px;
+            background-color: gray;
+        }
+        
+        .tab_css {
+            width: 400px;
+            height: 200px;
+            background-color: orange;
+            display: none;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="header-container">
+        <div class="back-icon-box">
+        </div>
+        <h1 class="header-title">I am a title.</h1>
+    </header>
+
+    <div id="content">
+        <div id="tab_bar">
+            <ul>
+                <li id="tab1" onclick="myclick(1)" style="background-color: orange">
+                    tab1
+                </li>
+                <li id="tab2" onclick="myclick(2)">
+                    tab2
+                </li>
+                <li id="tab3" onclick="myclick(3)">
+                    tab3
+                </li>
+            </ul>
+        </div>
+        <div class="tab_css" id="tab1_content" style="display: block">
+            <div>页面一</div>
+        </div>
+        <div class="tab_css" id="tab2_content">
+            <div>页面二</div>
+        </div>
+        <div class="tab_css" id="tab3_content">
+            <div>页面三</div>
+        </div>
+    </div>
+    <footer class="footer-container">
+        <ul class="tool-icon-list">
+            <li>首页</li>
+            <li>产品库</li>
+            <li>出单管理</li>
+            <li>我的</li>
+        </ul>
+    </footer>
+
+    <script type="text/javascript">
+        var myclick = function(v) {
+            var llis = document.getElementsByTagName("li");
+            for (var i = 0; i < llis.length; i++) {
+                var lli = llis[i];
+                if (lli == document.getElementById("tab" + v)) {
+                    lli.style.backgroundColor = "orange";
+                } else {
+                    lli.style.backgroundColor = "gray";
+                }
+            }
+
+            var divs = document.getElementsByClassName("tab_css");
+            for (var i = 0; i < divs.length; i++) {
+
+                var divv = divs[i];
+
+                if (divv == document.getElementById("tab" + v + "_content")) {
+                    divv.style.display = "block";
+                } else {
+                    divv.style.display = "none";
+                }
+            }
+
+        }
+    </script>
+
+</body>
