@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .overflower {
+            line-height: 1.5em;
+            display: inline-block;
+            overflow: hidden;
+            box-sizing: border-box;
+            max-width: 100%;
+            height: 1.5em;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .overflower-long {
+            display: inline;
+        }
+
+        .overflower-short {
+            display: none;
+        }
+
+        @supports (flex-wrap: wrap) {
+            .overflower {
+                display: inline-flex;
+                flex-wrap: wrap;
+            }
+            .overflower-short {
+                display: block;
+                overflow: hidden;
+                width: 0;
+                text-overflow: ellipsis;
+                flex-grow: 1;
+            }
+            .overflower-long {
+                flex-basis: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <span class="overflower">
+        <!-- 放置短文本的容器 -->
+        <span class="overflower-short" aria-hidden="true" title="Some long text that could become shorter">
+            Short text here is.</span>
+        <!-- 放置长文本的容器 -->
+        <span class="overflower-long">Some long text that could become shorter shorter shorter shorter shorter shorter shorter shorter.</span>
+    </span>
+
+</body>
+
+</html>

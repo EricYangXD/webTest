@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
     <script src="../../js/zepto.min.js"></script>
     <script src="../../js/jquery.js"></script>
     <title>read text</title>
@@ -85,20 +85,21 @@
         function splitConent($content) {
             $content = $($content);
 
-            $content.find(splitConfig.unitTag).each(function(index, item) {
+            $content.find(splitConfig.unitTag).each(function (index, item) {
                 var $item = $(item),
                     text = $.trim($item.text());
                 if (!text) return;
 
                 var nodes = $item[0].childNodes;
 
-                $.each(nodes, function(i, node) {
+                $.each(nodes, function (i, node) {
                     switch (node.nodeType) {
                         case 3:
                             // text 节点
                             // 由于是文本节点，标签被转义了，后续再转回来
                             node.data = '<' + splitConfig.wrapTag + '>' +
-                                node.data.replace(splitConfig.splitReg, '</' + splitConfig.wrapTag + '>$&<' + splitConfig.wrapTag + '>') +
+                                node.data.replace(splitConfig.splitReg, '</' + splitConfig.wrapTag +
+                                    '>$&<' + splitConfig.wrapTag + '>') +
                                 '</' + splitConfig.wrapTag + '>';
                             break;
                         case 1:
@@ -120,7 +121,8 @@
                             // 更新内部内容
                             node.innerHTML = start +
                                 '<' + splitConfig.wrapTag + '>' +
-                                innerHtml.replace(splitConfig.splitReg, '</' + splitConfig.wrapTag + '>$&<' + splitConfig.wrapTag + '>') +
+                                innerHtml.replace(splitConfig.splitReg, '</' + splitConfig.wrapTag +
+                                    '>$&<' + splitConfig.wrapTag + '>') +
                                 '</' + splitConfig.wrapTag + '>' +
                                 end;
                             break;
@@ -132,7 +134,8 @@
                 // 处理文本节点中被转义的html标签
                 $item[0].innerHTML = $item[0].innerHTML
                     .replace(new RegExp('<' + splitConfig.wrapTag + '>', 'g'), '<' + splitConfig.wrapTag + '>')
-                    .replace(new RegExp('</' + splitConfig.wrapTag + '>', 'g'), '</' + splitConfig.wrapTag + '>');
+                    .replace(new RegExp('</' + splitConfig.wrapTag + '>', 'g'), '</' + splitConfig.wrapTag +
+                        '>');
                 $item.find(splitConfig.wrapTag).addClass(splitConfig.wrapCls);
             });
             // ES5之前JavaScript并不支持正则的后行断言（也就是正则表达式中“后顾”）。所以没办法对包裹标签前后的 < 和 > 进行精准替换，只能连同标签名一起替换。
@@ -157,7 +160,7 @@
         }
         // 非正文需要朗读的标签 逗号分隔
         var speakTags = 'a, p, span, h1, h2, h3, h4, h5, h6, img, input, button';
-        $(document).on('mouseenter.speak-help', speakTags, function(e) {
+        $(document).on('mouseenter.speak-help', speakTags, function (e) {
             var $target = $(e.target);
             // 排除段落内的
             if ($target.parents('.' + splitConfig.wrapCls).length || $target.find('.' + splitConfig.wrapCls).length) {
@@ -173,7 +176,7 @@
             }
             // 开始朗读
             speakText(getText(e.target));
-        }).on('mouseleave.speak-help', speakTags, function(e) {
+        }).on('mouseleave.speak-help', speakTags, function (e) {
             var $target = $(e.target);
             if ($target.find('.' + splitConfig.wrapCls).length) {
                 return;
@@ -190,11 +193,11 @@
             stopSpeak();
         });
         // 段落内文本朗读
-        $(document).on('mouseenter.speak-help', '.' + splitConfig.wrapCls, function(e) {
+        $(document).on('mouseenter.speak-help', '.' + splitConfig.wrapCls, function (e) {
             $(this).addClass(splitConfig.hightlightCls);
             // 开始朗读
             speakText(getText(this));
-        }).on('mouseleave.speak-help', '.' + splitConfig.wrapCls, function(e) {
+        }).on('mouseleave.speak-help', '.' + splitConfig.wrapCls, function (e) {
             $(this).removeClass(splitConfig.hightlightCls);
             // 停止语音
             stopSpeak();
@@ -217,7 +220,7 @@
         function speakText(text) {
             clearTimeout(speakTimer);
             window.speechSynthesis.cancel();
-            speakTimer = setTimeout(function() {
+            speakTimer = setTimeout(function () {
                 speaker.text = text;
                 window.speechSynthesis.speak(speaker);
             }, 200);
@@ -227,7 +230,7 @@
         function stopSpeak() {
             clearTimeout(stopTimer);
             clearTimeout(speakTimer);
-            stopTimer = setTimeout(function() {
+            stopTimer = setTimeout(function () {
                 window.speechSynthesis.cancel();
             }, 20);
         }

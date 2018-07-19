@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>SVG</title>
+    <style>
+        .svg-1:hover path {
+            d: path("M8,2 L2,8");
+        }
+
+        path {
+            transition: d 0.5s linear;
+        }
+    </style>
+</head>
+
+<body>
+    <svg width="100" height="100">
+        <circle cx="50" cy="50" r="40" stroke="green" stroke-width="4" fill="yellow" />
+    </svg>
+    <svg width="400" height="100">
+        <rect width="400" height="100" style="fill:rgb(0,0,255);stroke-width:10;stroke:rgb(0,0,0)" />
+    </svg>
+    <svg width="400" height="180">
+        <rect x="50" y="20" rx="20" ry="20" width="150" height="150" style="fill:red;stroke:black;stroke-width:5;opacity:0.5" />
+    </svg>
+    <svg width="300" height="200">
+        <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;" />
+    </svg>
+    <svg height="130" width="500">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:rgb(255,255,0);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:rgb(255,0,0);stop-opacity:1" />
+            </linearGradient>
+        </defs>
+        <ellipse cx="100" cy="70" rx="85" ry="55" fill="url(#grad1)" />
+        <text fill="#ffffff" font-size="45" font-family="Verdana" x="50" y="86">SVG</text>
+        Sorry, your browser does not support inline SVG.
+    </svg>
+    <svg viewBox="0 0 2706 2048" width="120" height="66" class="svg-hand">
+        <g id="hand">
+            <circle cx="370" cy="90" r="210" fill="yellow"></circle>
+            <path d="./111.png"></path>
+        </g>
+        <path id="animation-hand-arc" d="M-514,665c0,0,1378.463-1138.762,2891,0" stroke="transparent" fill="transparent" />
+        <animateMotion id="arcmove" xlink:href="#hand" dur="1s" begin="0" fill="repeat" repeatCount="10">
+            <mpath xlink:href="#animation-hand-arc" />
+        </animateMotion>
+    </svg>
+    <svg class="volumn-controller" width="580" height="400" xmlns="http://www.w3.org/2000/svg">
+        <path class="volumn-path" stroke="#000" d="m100,247c93,-128 284,-129 388,6" opacity="0.5" stroke-width="1" fill="#fff" />
+        <circle class="drag-button" r="12" cy="180.86880493164062" cx="173.97312927246094" stroke-width="1" stroke="#000" fill="#fff"
+        />
+        </g>
+    </svg>
+    <svg viewBox="0 0 10 10" class="svg-1">
+        <path d="M2,2 L8,8" />
+    </svg>
+
+    <script>
+        let a = 12;
+        let b = 23;
+        console.log(a * b);
+        let $volumnPath = document.querySelector('.volumn-path');
+
+        // 输出path在长度为100的位置的点坐标
+        console.log($volumnPath.getPointAtLength(100));
+        // 输出当前path的总长度
+        console.log($volumnPath.getTotalLength());
+
+        let $volumnController = document.querySelector('.volumn-controller');
+        // 得到当前路径的总长度
+        let pathTotalLength = $volumnPath.getTotalLength() >> 0;
+        let points = [];
+        // 起始位置为长度为0的位置
+        let startX = Math.round($volumnPath.getPointAtLength(0).x);
+        // 每隔一个像素距离就保存一下路径上点的坐标
+        for (let i = 0; i < pathTotalLength; i++) {
+            let p = $volumnPath.getPointAtLength(i);
+            // 保存的坐标用四舍五入，可以平衡误差
+            points[Math.round(p.x) - startX] = Math.round(p.y);
+        }
+
+        let $dragButton = $volumnController.querySelector('.drag-button'),
+            // 得到起始位置相对当前视窗的位置，相当于jQuery.fn.offset
+            dragButtonPos = $dragButton.getBoundingClientRect();
+
+        function movePoint(event) {
+            // 当前鼠标的位置减去圆心起始位置就得到移位偏差，12是半径值，这里先直接写死
+            let diffX = event.clientX - Math.round(dragButtonPos.left + 12);
+            // 需要做个边界判断
+            diffX < 0 && (diffX = 0);
+            diffX >= points.length && (diffX = points.length - 1);
+            // startX是在上面的代码得到的长度为0的位置
+            $dragButton.setAttribute('cx', diffX + startX);
+            // 使用points数组得到y坐标
+            $dragButton.setAttribute('cy', points[diffX]);
+        }
+        $dragButton.addEventListener('mousedown', function (event) {
+            document.addEventListener('mousemove', movePoint);
+        });
+        document.addEventListener('mouseup', function () {
+            document.removeEventListener('mousemove', movePoint);
+        });
+    </script>
+
+</body>
+
+</html>

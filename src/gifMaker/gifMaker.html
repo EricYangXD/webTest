@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./gif.js/dist/gif.js"></script>
+</head>
+
+<body>
+
+
+
+    <script>
+        var gif = new GIF({
+            workers: 2,
+            quality: 10
+        });
+
+        // 添加图片元素
+        gif.addFrame(imageElement);
+
+        // 或者是canvas元素
+        gif.addFrame(canvasElement, {
+            delay: 200
+        });
+
+        // 或者从canvas的上下文复制像素信息
+        gif.addFrame(ctx, {
+            copy: true
+        });
+
+        gif.on('finished', function (blob) {
+            // 这里的blob就是gif图片blod格式信息
+            window.open(URL.createObjectURL(blob));
+        });
+
+        gif.render();
+    </script>
+</body>
+
+</html>

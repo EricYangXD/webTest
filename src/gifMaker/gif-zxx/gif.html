@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gif自定义在线生成器</title>
+    <meta name="description" content="gif动画在线生成，GIF字幕定制工具，纯前端实现的可以自定义字幕的Gif生成工具" />
+    <meta name="keywords" content="gif, 字幕, 前端, canvas, 生成器, 下载, gif表情" />
+    <link rel="stylesheet" href="./lulu/demo.css">
+    <link rel="stylesheet" href="./lulu/lib.css">
+    <link rel="stylesheet" href="./lulu/ui.css">
+    <link rel="stylesheet" href="./lulu/style.css">
+</head>
+
+<body>
+    <div id="header">
+    </div>
+    <div id="main">
+        <h1>可自定义字幕的Gif表情在线生成器</h1>
+        <a href="http://www.zhangxinxu.com/wordpress/?p=7539" id="back">实现原理和使用说明 »</a>
+        <div id="body" class="light">
+            <div id="content" class="show">
+                <h3>纯web前端生成GIF表情</h3>
+                <form id="form" class="demo" action="https://www.zhangxinxu.com/sp/gif/cgi/template.php">
+                    <div class="mt20">
+                        <input type="radio" id="radioModule" name="radio" value="module">
+                        <label for="radioModule" class="ui-radio mr5"></label>
+                        <label for="radioModule" class="ml2">使用现有模板</label>
+                        <div class="mt10 pl30 radio-switch">
+                            <div>
+                                <span class="tab">
+                                    <input type="radio" id="radioTpl1" name="template" value="money">
+                                    <label for="radioTpl1" class="ui-radio mr5"></label>
+                                    <label for="radioTpl1">有钱为所欲为</label>
+                                </span>
+                                <span class="tab">
+                                    <input type="radio" id="radioTpl2" name="template" value="food">
+                                    <label for="radioTpl2" class="ui-radio mr5"></label>
+                                    <label for="radioTpl2">王境泽真香</label>
+                                </span>
+                                <span class="tab">
+                                    <input type="radio" id="radioTpl3" name="template" value="wind">
+                                    <label for="radioTpl3" class="ui-radio mr5"></label>
+                                    <label for="radioTpl3">今天的风甚为喧闹</label>
+                                </span>
+                            </div>
+                            <!-- 为所欲为 -->
+                            <div id="moneyListX" class="play-list jsPlayList"></div>
+                            <!-- 王境泽 -->
+                            <div id="foodListX" class="play-list jsPlayList"></div>
+                            <!-- 男子高校 -->
+                            <div id="windListX" class="play-list jsPlayList"></div>
+                        </div>
+                    </div>
+                    <div class="mt20">
+                        <input type="radio" id="radioCustom" name="radio" value="custom">
+                        <label for="radioCustom" class="ui-radio mr5"></label>
+                        <label for="radioCustom" class="ml2">自己DIY GIF内容</label>
+
+                        <div class="mt10 pl30 radio-switch">
+                            <div class="upload_box">
+                                <div class="upload_main">
+                                    <div class="upload_choose">
+                                        <label for="fileImage" id="upImgBtn" class="ui-button ui-button-primary">上传序列图片</label>
+                                        <input id="fileImage" type="file" class="clip" multiple accept="image/jpeg,image/png,image/gif" />
+                                        <span id="fileDragArea" class="upload_drag_area">或者将图片拖到此处</span>
+                                    </div>
+                                    <div id="preview" class="upload_preview"></div>
+                                </div>
+                                <div class="upload_submit">
+                                    <button type="button" id="fileSubmit" class="upload_submit_btn">确认上传图片</button>
+                                </div>
+                                <div id="uploadInf" class="upload_inf"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 最后的生成按钮 -->
+                    <div class="mt30 tc">
+                        <input type="submit" id="submitBtn" class="ui-button ui-button-warning" value="生成GIF图片">
+                    </div>
+
+                    <!-- 这是生成效果图 -->
+                    <div id="result" class="result"></div>
+                    <p class="down-tips">右键另存图片即可下载</p>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var storeGifRadio = localStorage.getItem("storeGifRadio") || "radioModule";
+        if (storeGifRadio) {
+            document.getElementById(storeGifRadio).checked = true;
+        } else {
+            document.getElementById('radioModule').checked = true;
+            localStorage.setItem("storeGifRadio") = 'radioModule';
+        }
+    </script>
+    <script id="tplList" type="text/template">
+        <div class="img-list">
+            <div class="img-x">
+                <img src="./images/$value$/$src$" class="img img-$value$">
+            </div>
+            <div class="img-input-x">
+                <div class="ui-input">
+                    <input name="message" placeholder="输入对话信息" value="$message$">
+                </div>
+                <div class="ovh">
+                    <span class="l mt5 ml20">延时：</span>
+                    <input type="number" name="delay" min="0" step="1" size="4" class="ui-input img-input-delay" value="$delay$">ms
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script src="./jquery.min.js"></script>
+    <script src="./dist/gif.js"></script>
+    <script src="./main-min.js"></script>
+    <div id="footer" class="foot_bg footer" role="contentinfo">
+    </div>
+</body>
+
+</html>

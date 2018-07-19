@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <button id="btn">click</button>
+    <script>
+        var btn = document.getElementById('btn');
+        speechSynthesis.cancel()
+        var u = new SpeechSynthesisUtterance();
+        u.text = "This text was changed from the original demo.";
+
+        var t;
+        u.onstart = function (event) {
+            t = event.timeStamp;
+            console.log(t);
+        };
+
+        u.onend = function (event) {
+            t = event.timeStamp - t;
+            console.log(event.timeStamp);
+            console.log((t / 1000) + " seconds");
+        };
+
+        btn.onclick = function () {
+            speechSynthesis.speak(u);
+        };
+        // 官方示例1
+        // speechSynthesis.speak(SpeechSynthesisUtterance('Hello World'));
+        // 官方示例2        
+        // var u = new SpeechSynthesisUtterance();
+        // u.text = 'Hello World';
+        // u.lang = 'en-US';
+        // u.rate = 1.2;
+        // u.onend = function(event) { alert('Finished in ' + event.elapsedTime + ' seconds.'); }
+        // speechSynthesis.speak(u);
+    </script>
+</body>
+
+</html>

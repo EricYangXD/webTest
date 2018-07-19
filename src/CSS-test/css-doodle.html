@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Css Doodle</title>
+    <script src="../js/css-doodle.min.js"></script>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .animation-title {
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        .eye-animation {
+            width: 1800%;
+            height: 100%;
+            background-image: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/123941/blinking-eye-sprite.svg");
+            background-size: 100%, 100%;
+            background-repeat: no-repeat;
+            animation-name: eye-fill;
+            animation-duration: 1.3s;
+            animation-timing-function: steps(17);
+            animation-iteration-count: infinite;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .eye-animation__wrapper {
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+
+        @keyframes eye-fill {
+            from {
+                transform: translateX(0);
+            }
+            to {
+                transform: translateX(-94.44444444%);
+            }
+        }
+
+        .ie .eye-animation {
+            transform: translate3d(0, 0, 0);
+            animation-name: eye-fill-ie;
+        }
+
+        @keyframes eye-fill-ie {
+            from {
+                left: 0;
+            }
+            to {
+                left: -1700%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <css-doodle>
+        :doodle { @grid: 1x5 / 170px 34px; } @size: 20px; --n: @index(); border-radius: 50%; margin: 7px; background-color: hsla(
+        180, calc(var(--n) * 40%), 30%, calc(var(--n) * .2)); :after { @size: 20px; content: ''; border-radius: 50%; opacity:
+        0.7; background-color: hsla( 180, calc(var(--n) * 40%), 30%, calc(var(--n) * .2)); animation: scale 2s infinite cubic-bezier(0,
+        0, 0.49, 1.02); animation-delay: calc(200ms * @index()); transition: 0.5s all ease; transform: scale(1); } @keyframes
+        scale { 0% { transform: scale(1); } 50%, 75% { transform: scale(2.5); } 78%, 100% { opacity: 0; } }
+
+
+    </css-doodle>
+    <br>
+
+    <!-- animation container -->
+    <h2 class="animation-title"></h2>
+    <div class="eye-animation__wrapper">
+        <!-- sprite container(we will move this one) -->
+        <div class="eye-animation"></div>
+    </div>
+</body>
+
+</html>
