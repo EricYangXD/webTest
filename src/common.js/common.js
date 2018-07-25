@@ -240,7 +240,7 @@ function appendScript(src, text, reload, charset) {
         if (src) {
             scriptNode.src = src;
             scriptNode.Done = false;
-            scriptNode. = function () {
+            scriptNode = function () {
                 scriptNode.Done = true;
                 JSLOADED[src] = 1;
             };
