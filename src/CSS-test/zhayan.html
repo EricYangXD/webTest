@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>眨眼</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
+    <style>
+        @keyframes eye {
+            0% {
+                background-position: 0 0;
+            }
+            2% {
+                background-position: -74px 0;
+            }
+            4% {
+                background-position: -152px 0;
+            }
+            6% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 0;
+            }
+        }
+
+        div.eye {
+            width: 30px;
+            height: 25px;
+            animation-name: eye;
+            background-size: 100%, 100%;
+            animation-duration: 0.8s;
+            animation-timing-function: steps(5);
+            animation-iteration-count: infinite;
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: url("./zhayan.jpg") no-repeat;
+        }
+    </style>
+</head>
+
+
+<body>
+    <div class="eye"></div>
+
+</body>
+
+</html>

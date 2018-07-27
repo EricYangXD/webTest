@@ -16,17 +16,10 @@
             var node = document.createElement('div');
             //对documentfragment不熟，不知道怎么获取里面的内容，用了一个比较笨的方式
             node.appendChild(window.getSelection().getRangeAt(0).cloneContents());
-            var htmlData = '<div>著作权归作者所有。<br />' +
-                '商业转载请联系作者获得授权，非商业转载请注明出处。<br />' +
-                '作者：EricYang <br />链接：http://www.ericyangxd.com <br />' +
-                '来源：EricYangXD <br /><br />' +
-                node.innerHTML +
-                '</div>';
-            var textData = '著作权归作者所有。\n' +
-                '商业转载请联系作者获得授权，非商业转载请注明出处。\n' +
-                '作者：EricYang \n链接：http://www.ericyangxd.com \n' +
-                '来源：EricYangXD \n\n' +
-                window.getSelection().getRangeAt(0);
+            var htmlData =
+                `<div>${node.innerHTML} <br /><br /> 著作权归作者所有。<br /> 商业转载请联系作者获得授权，非商业转载请注明出处。<br /> 作者：EricYang <br />链接：http://www.ericyangxd.com <br />来源：EricYangXD</div>`;
+            var textData =
+                `${ window.getSelection().getRangeAt(0)} \n\n 著作权归作者所有。\n 商业转载请联系作者获得授权，非商业转载请注明出处。\n 作者：EricYang \n 链接：http://www.ericyangxd.com \n 来源：EricYangXD`;
             if (event.clipboardData) {
                 event.clipboardData.setData("text/html", htmlData);
                 event.clipboardData.setData("text/plain", textData);
@@ -35,7 +28,7 @@
             }
         };
         var answer = document.getElementById("answer");
-        answer.addEventListener('copy', function (e) {
+        answer.addEventListener("copy", function (e) {
             setClipboardText(e);
         });
     </script>

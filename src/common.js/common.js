@@ -383,3 +383,49 @@ function getArrRandomly(arr) {
     return arr;
 }
 getArrRandomly([0, 1, 2, 3, 4, 5, 6, 7, 8]); //[8, 6, 2, 5, 4, 3, 7, 0, 1]
+
+/* 
+    变量声明提升
+*/
+(function (a) {
+    console.log(a);
+    var a = 10;
+
+    function a() {};
+}(100)) //[Function: a]
+
+(function (a) {
+    console.log(a);
+    var a = 10;
+    // function a(){};
+}(100)) //100
+
+(function (a) {
+    var a = 10;
+    console.log(a);
+    // function a(){};
+}(100)) //10
+
+(function (a) {
+    console.log(a);
+    var a = 10;
+    var a = function () {};
+}(100)) //100
+
+(function (a) {
+    console.log(a);
+    var a = function () {};
+    var a = 10;
+}(100)) //100
+
+(function (a) {
+    var a = 10;
+    var a = function () {};
+    console.log(a);
+}(100)) //[Function: a]
+
+(function (a) {
+    var a = function () {};
+    var a = 10;
+    console.log(a);
+}(100)) //10

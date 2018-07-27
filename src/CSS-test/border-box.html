@@ -7,19 +7,219 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        div {
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* border-box test */
+
+        /* div {
             box-sizing: inherit;
             width: 100%;
             padding: 20px;
             border: 1px solid rgb(158, 5, 5);
+        } */
+
+        /* float+margin负边距 右侧定宽，左侧自适应 */
+
+        /* .left {
+            width: 100%;
+            float: left;
+            margin-right: -200px;
+            background: green;
+            height: 400px;
+        }
+
+        .right {
+            float: right;
+            width: 200px;
+            background: red;
+            height: 400px;
+        } */
+
+        /* flex 右侧定宽，左侧自适应 */
+
+        /* .content {
+            width: 100%;
+            display: flex;
+            height: 400px;
+        }
+
+        .left {
+            flex: 1;
+            background: green;
+        }
+
+        .right {
+            flex: 0 0 200px;
+            background: red;
+        } */
+
+        /* 圣杯布局 */
+
+        /* .HolyGrail {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+         header,
+        footer {
+            flex: 1;
+            background: #e5e7e9;
+        } 
+
+        .HolyGrail-body {
+            display: flex;
+            flex: 1;
+        }
+
+        .HolyGrail-content {
+            flex: 1;
+            background: #b3b5b7;
+        } */
+
+        /* 两个边栏的宽度设为12em */
+
+        /* .HolyGrail-nav,
+        .HolyGrail-ads {
+            flex: 0 0 22em;
+        } */
+
+        /* 导航放到最左边 */
+
+        /* .HolyGrail-nav {
+            order: -1;
+        } */
+
+        /* 如果是小屏幕，躯干的三栏自动变为垂直叠加。 */
+
+        /* @media (max-width: 768px) {
+            .HolyGrail-body {
+                flex-direction: column;
+                flex: 1;
+            }
+            .HolyGrail-nav,
+            .HolyGrail-ads,
+            .HolyGrail-content {
+                flex: auto;
+            }
+        } */
+
+        /* 输入框的前方添加提示，后方添加按钮 */
+
+        /* .InputAddOn {
+            display: flex;
+        }
+
+        .InputAddOn-field {
+            flex: 0 0 100px;
+        } */
+
+        /* 主栏的左侧或右侧，需要添加一个图片栏。 */
+
+        /* .Media {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .Media-figure {
+            margin-right: 1em;
+        }
+
+        .Media-body {
+            flex: 1;
+        } */
+
+        /* 固定的底栏sticky footer */
+
+        .Site {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        .Site-content {
+            flex: 1;
+        }
+
+        /* 流式布局 */
+
+        .parent {
+            /* width: 200px; */
+            height: 150px;
+            background-color: black;
+            display: flex;
+            flex-flow: row wrap;
+            align-content: flex-start;
+        }
+
+        .child {
+            box-sizing: border-box;
+            background-color: white;
+            flex: 0 0 25%;
+            height: 50px;
+            border: 1px solid red;
         }
     </style>
 </head>
 
-<body>
-    <div class="borderbox">
+<!-- <body> -->
+<!-- <body class="HolyGrail"> -->
+<!-- <div class="borderbox">
         border-box
+    </div> -->
+<!-- 左侧自适应，右侧定宽 -->
+<!-- <div class="content">
+        <div class="left">left</div>
+        <div class="right">right</div>
+    </div> -->
+<!-- flex圣杯布局 -->
+<!-- <header>header</header>
+    <div class="HolyGrail-body">
+        <main class="HolyGrail-content">HolyGrail-content</main>
+        <nav class="HolyGrail-nav">HolyGrail-nav</nav>
+        <aside class="HolyGrail-ads">HolyGrail-ads</aside>
     </div>
+    <footer>footer</footer> -->
+<!-- 输入框的前方添加提示，后方添加按钮 -->
+<!-- <div class="InputAddOn">
+        <span class="InputAddOn-item">112222222111</span>
+        <input class="InputAddOn-field">
+        <button class="InputAddOn-item">22222</button>
+    </div> -->
+<!-- 主栏的左侧或右侧，需要添加一个图片栏。 -->
+<!-- <div class="Media">
+        <img class="Media-figure" src="./zhayan.jpg" alt="#">
+        <p class="Media-body">...</p>
+    </div> -->
+<!-- 固定的底栏sticky footer -->
+
+<body class="Site">
+    <header>header</header>
+    <main class="Site-content">Site-content
+        <div class="parent">
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+            <div class="child">1</div>
+        </div>
+    </main>
+    <footer>footer</footer>
 </body>
+
+
+<!-- 流式布局 -->
+
+
+<!-- </body> -->
 
 </html>
