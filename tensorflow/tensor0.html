@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Tensorflow.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.0"></script> -->
+    <script src="./tfjs@0.12.0.js"></script>
+    </script>
+</head>
+
+<body>
+    <canvas id="myCanvas"></canvas>
+
+    <div id="show">
+
+    </div>
+    <script>
+        //三种声明张量的方式
+        const tensor = tf.scalar(2);
+        const input = tf.tensor([2, 2]);
+        const input_0 = tf.zeros([2, 2]);
+        //张量的大小
+        const tensor_s = input.shape;
+        //使用variable.print()打印输出
+        // input.square().print(); //平方
+        const x = tf.tensor([1, 2, 3]);
+        const x2 = x.square().square();
+
+        // 定义一个方程：f(x)=x^6+2x^4+3x^2+x+1
+        function f(x) {
+            const f1 = x.pow(tf.scalar(6, 'int32'));
+            const f2 = x.pow(tf.scalar(4, 'int32')).mul(tf.scalar(2));
+            const f3 = x.pow(tf.scalar(2, 'int32')).mul(tf.scalar(3));
+            const f4 = x;
+            const f5 = x.pow(tf.scalar(1));
+            return f1.add(f2).add(f3).add(f4).add(f5);
+        }
+
+
+
+        function minimize(epochs, lr) {
+            //设置一个初始值
+            let y = tf.variable(tf.scalar(2));
+            //使用Adam优化器，lr:学习率，epochs:迭代次数。
+            const optim = tf.train.adam(lr);
+            for (let i = 0; i < epochs; i++) {
+                optim.minimize(() => f(y));
+            }
+            return y;
+        }
+
+        // minimize(200, 0.9).print();
+
+
+
+        /* 创建一个简单的神经网络 */
+
+        const xs = tf.tensor2d([
+            [0, 0],
+            [0, 1],
+            [1, 0],
+            [1, 1]
+        ]);
+        const ys = tf.tensor2d([
+            [0],
+            [1],
+            [1],
+            [0]
+        ]);
+
+        async function createModel() {
+            var model = tf.sequential();
+            model.add(tf.layers.dense({
+                units: 8,
+                inputShape: 2,
+                activation: 'tanh'
+            }));
+            model.add(tf.layers.dense({
+                units: 1,
+                activation: 'sigmoid'
+            }));
+            model.compile({
+                optimizer: 'sgd',
+                loss: 'binaryCrossentropy',
+                lr: '0.1'
+            });
+            // return model;
+            await model.fit(xs, ys, {
+                batchSize: 1,
+                epochs: 5000
+            });
+            model.predict(xs).print();
+        }
+        // createModel();//浏览器跑的巨慢...
+
+        //CNN模型
+        async function createCNN() {
+            const model = tf.sequential();
+            const convlayer1 = tf.layers.conv2d({
+                inputShape: [28, 28, 1],
+                kernelSize: 5,
+                filters: 8,
+                strides: 1,
+                activation: 'relu',
+                kernelInitializer: 'VarianceScaling'
+            });
+            const poolingLayer = tf.layers.maxPooling2d({
+                poolSize: [2, 2],
+                strides: [2, 2]
+            });
+            const convlayer2 = tf.layers.conv2d({
+                kernelSize: 5,
+                filters: 16,
+                strides: 1,
+                activation: 'relu',
+                kernelInitializer: 'VarianceScaling'
+            });
+            const denseLayer = tf.layers.dense({
+                units: 10,
+                kernelInitializer: 'VarianceScaling',
+                activation: 'softmax'
+            })
+            model.add(convlayer1);
+            model.add(poolingLayer);
+            model.add(convlayer2);
+            model.add(poolingLayer);
+            model.add(tf.layers.flatten());
+            model.add(denseLayer);
+            //评估卷积层
+            const convlayer3 = tf.layers.conv2d({
+                inputShape: [28, 28, 1],
+                kernelSize: 5,
+                filters: 8,
+                strides: 1,
+                activation: 'relu',
+                kernelInitializer: 'VarianceScaling'
+            });
+            const input3 = tf.zeros([1, 28, 28, 1]);
+            // let inputSize = input3.shape;
+            // let kernelSize = 5;
+            // let stride = 1;
+            const output3 = convlayer3.apply(input3);
+            //使用公式评估
+            const outputSize3 = Math.floor((inputSize - kernelSize) / stride + 1);
+            //优化和编译
+            //创建优化器
+            const LEARNING_RATE = 0.0001;
+            const optimizer = tf.train.adam(LEARNING_RATE);
+            //编译
+            model.compile({
+                optimizer: optimizer,
+                loss: 'categoricalCrossentropy',
+                metrics: ['accuracy']
+            });
+            // 训练
+            const batch = tf.zeros([BATCH_SIZE, 28, 28, 1]);
+            const labels = tf.zeros([BATCH_SIZE, NUM_CLASSES]);
+            const h = await model.fit(batch, labels, {
+                batchSize: BATCH_SIZE,
+                validationData: validationData,
+                epochs: BATCH_EPOCHs
+            });
+            //热编码
+            const output = tf.oneHot(tf.tensor1d([0, 1, 0]), 2);
+            //损失和准确性
+            const loss = h.history.loss[0];
+            const accuracy = h.history.acc[0];
+            //预测
+            const canvas = document.getElementById("myCanvas");
+            const ctx = canvas.getContext("2d");
+            var imageData = ctx.getImageData(0, 0, 28, 28);
+            const tensor = tf.fromPixels(imageData);
+            const eTensor = tensor.expandDims(0);
+            model.predict(eTensor).print();
+        }
+        // createCNN();
+    </script>
+</body>
+
+</html>
