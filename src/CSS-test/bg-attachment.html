@@ -4,22 +4,36 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Background attachment test</title>
+    <meta name="description" content="滚动视差,background-attachment:fixed">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Background attachment test</title>
+    <script src="../../js/jquery.js"></script>
     <style>
+        /* 不显示滚动条，但仍可以滚动 */
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
         html,
         body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
+            /* overflow-y: scroll; */
+            /* padding-right: 17px; */
+            /* overflow-x: hidden; */
+            /* overflow-y: hidden; */
         }
 
         section {
-            height: 100vh;
             width: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            height: 100vh;
             line-height: 100vh;
-            font-size: 20vh;
             text-align: center;
+            font-size: 20vh;
+            background: rgba(0, 0, 0, 0.6);
         }
 
         .bg_attach1 {
@@ -50,23 +64,222 @@
         }
 
         .bg-word {
-            /* background-color: #e3e5e7; */
-            text-align: center;
-            vertical-align: middle;
-            font-size: 24vh;
-            /* margin-top: 50%; */
+            font-size: 12vh;
+        }
+
+        .reds {
+            fill: red;
+        }
+
+        /* 水波纹 */
+
+        .g-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-image: url("../../images/13.jpg");
+            background-attachment: fixed;
+            background-position: center center;
+            background-size: auto 100%;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .g-position {
+            position: absolute;
+            width: 80vmin;
+            height: 80vmin;
+        }
+
+        .g-center {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .wave {
+            position: absolute;
+            top: calc((100% - 20vmin)/2);
+            left: calc((100% - 20vmin)/2);
+            width: 20vmin;
+            height: 20vmin;
+            border-radius: 50%;
+            background-image: url("../../images/13.jpg");
+            background-attachment: fixed;
+            background-position: center center;
+            transform: translate3d(0, 0, 0);
+            opacity: 0;
+            transition: all 0.2s;
+        }
+
+        .g-wave1 {
+            background-size: auto 106%;
+            animation: wave 1s ease-out 0.1s;
+            animation-fill-mode: forwards;
+            z-index: 10;
+        }
+
+        .g-wave2 {
+            background-size: auto 102%;
+            animation: wave 1s ease-out 0.15s;
+            animation-fill-mode: forwards;
+            z-index: 20;
+        }
+
+        .g-wave3 {
+            background-size: auto 104%;
+            animation: wave 1s ease-out 0.25s;
+            animation-fill-mode: forwards;
+            z-index: 30;
+        }
+
+        .g-wave4 {
+            background-size: auto 100%;
+            animation: wave 1s ease-out 0.4s;
+            animation-fill-mode: forwards;
+            z-index: 40;
+        }
+
+        @keyframes wave {
+            0% {
+                top: calc((100% - 20vmin)/2);
+                left: calc((100% - 20vmin)/2);
+                width: 20vmin;
+                height: 20vmin;
+                opacity: 1;
+            }
+            99% {
+                opacity: 1;
+            }
+            100% {
+                top: calc((100% - 80vmin)/2);
+                left: calc((100% - 80vmin)/2);
+                width: 80vmin;
+                height: 80vmin;
+                opacity: 0;
+            }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, .8);
+        }
+
+        .box-login .section {
+            margin: auto;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 200px;
+            height: 100px;
+            background: #fff;
+            z-index: 10;
+            font-size: 20px;
         }
     </style>
 </head>
 
 <body>
-    <section class="bg-word">Header</section>
-    <section class="bg_attach1">image 1</section>
-    <section class="bg-word">Section1</section>
-    <section class="bg_attach2">image 2</section>
-    <section class="bg-word">Section2</section>
-    <section class="bg_attach3">image 3</section>
-    <section class="bg-word">Footer</section>
+    <section class="bg-word">Header
+        <svg width="50vh" height="50vh">
+            <circle cx="300" cy="200" r="100" class="reds"></circle>
+        </svg>
+    </section>
+    <section class="bg_attach1">image 1
+
+    </section>
+    <section class="bg-word">Section1
+        <svg width="50vh" height="50vh">
+            <circle cx="300" cy="200" r="100" class="reds"></circle>
+        </svg>
+    </section>
+    <section class="bg_attach2">image 2
+        <svg width="50vh" height="50vh">
+            <circle cx="300" cy="200" r="100" class="reds"></circle>
+        </svg>
+    </section>
+    <section class="bg-word">Section2
+        <svg width="50vh" height="50vh">
+            <circle cx="300" cy="200" r="100" class="reds"></circle>
+        </svg>
+    </section>
+    <section class="bg_attach3">image 3
+        <svg width="50vh" height="50vh">
+            <circle cx="300" cy="200" r="100" class="reds"></circle>
+        </svg>
+    </section>
+    <section class="bg-word">Footer
+        <svg width="50vh" height="50vh">
+            <circle cx="300" cy="200" r="100" class="reds"></circle>
+        </svg>
+    </section>
+    <section class="g-container">
+
+    </section>
+    <a class="js-open-box" href="#">显示弹窗</a>
+    <div class="overlay box-login">
+        <div class="section">
+            弹窗内容
+        </div>
+    </div>
+    <script>
+        (function () {
+            let x, y;
+            let index = 0;
+            let screenSizeWidth = $('body').width();
+            let screenSizeHeight = $('body').height();
+            let halfvmin = (screenSizeWidth > screenSizeHeight ? screenSizeHeight / 2 : screenSizeWidth / 2) * 0.8;
+
+            console.log('halfvmin', halfvmin);
+
+            $(document).on("click", function (e) {
+                x = e.pageX;
+                y = e.pageY;
+                waveMove(x, y, index++);
+            });
+
+            function waveMove(x, y, z) {
+                $(".g-container").append(
+                    `
+                    <div class="g-position g-position${z}" style="top:${y - halfvmin}px; left:${x - halfvmin}px; z-index:${z}">
+                        <div class="g-center">
+                            <div class="wave g-wave1"></div>
+                            <div class="wave g-wave2"></div>
+                            <div class="wave g-wave3"></div>
+                            <div class="wave g-wave4"></div>
+                        </div>
+                    </div>
+                    `
+                );
+
+                setTimeout(function () {
+                    $(`.g-position${z}`).remove();
+                }, 3000);
+            }
+
+            $('.js-open-box').on('click', function () {
+                $('.box-login').fadeIn(200);
+            });
+            //如果需要点击 overlay 关闭弹窗的话，注意阻止事件冒泡
+            $('.box-login .section').on('click', function (e) {
+                e.stopPropagation();
+            });
+            $('.overlay').on('click', function () {
+                $('.overlay').fadeOut(200, function () {
+                    $(this).removeAttr('style');
+                });
+            });
+        })();
+    </script>
 
 </body>
 
