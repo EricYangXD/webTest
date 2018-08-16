@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Background attachment test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        section {
+            height: 100vh;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            line-height: 100vh;
+            font-size: 20vh;
+            text-align: center;
+        }
+
+        .bg_attach1 {
+            background-attachment: fixed;
+            background-image: url('../../images/1.jpg');
+            background-size: cover;
+            background-position: center center;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .bg_attach2 {
+            background-attachment: fixed;
+            background-image: url('../../images/2.jpg');
+            background-size: cover;
+            background-position: center center;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .bg_attach3 {
+            background-attachment: fixed;
+            background-image: url('../../images/3.jpg');
+            background-size: cover;
+            background-position: center center;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .bg-word {
+            /* background-color: #e3e5e7; */
+            text-align: center;
+            vertical-align: middle;
+            font-size: 24vh;
+            /* margin-top: 50%; */
+        }
+    </style>
+</head>
+
+<body>
+    <section class="bg-word">Header</section>
+    <section class="bg_attach1">image 1</section>
+    <section class="bg-word">Section1</section>
+    <section class="bg_attach2">image 2</section>
+    <section class="bg-word">Section2</section>
+    <section class="bg_attach3">image 3</section>
+    <section class="bg-word">Footer</section>
+
+</body>
+
+</html>
