@@ -47,7 +47,7 @@
             }
 
             route(path, callback) {
-                this.routes[path] = callback || function() {};
+                this.routes[path] = callback || function () {};
             }
 
             go(path) {
@@ -73,18 +73,18 @@
             content.style.backgroundColor = color;
         }
 
-        Router.route('/', function() {
+        Router.route('/', function () {
             changeBgColor('yellow');
         });
-        Router.route('/blue', function() {
+        Router.route('/blue', function () {
             changeBgColor('blue');
         });
-        Router.route('/green', function() {
+        Router.route('/green', function () {
             changeBgColor('green');
         });
 
         ul.addEventListener('click', e => {
-            if (e.target.tagName === 'A') {
+            if (e.target && e.target.tagName === 'A') {
                 e.preventDefault();
                 Router.go(e.target.getAttribute('href'));
             }

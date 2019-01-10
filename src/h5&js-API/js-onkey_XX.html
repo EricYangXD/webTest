@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script>
+        function checkForm(){
+            if(event.keyCode ==13){
+                event.keyCode =9;
+            }
+        }
+    </script>
+
+    <body>
+        <form name="form1">
+            <input type="text" name="text1" onkeydown="alert('onkeydown'+this.value);">
+            <input type="text" name="text2" onkeypress="alert('onkeypress'+this.value);">
+            <input type="text" name="text3" onkeyup="alert('onkeyup'+this.value);">
+            <input type="button" name="button1" value="按钮">
+        </form>
+    </body>
+    <!-- 
+
+        onkeypress 
+        这个事件在用户按下并放开任何字母数字键时发生。系统按钮（例如，箭头键和功能键）无法得到识别。
+
+        onkeyup 
+        这个事件在用户放开任何先前按下的键盘键时发生。
+
+        onkeydown 
+        这个事件在用户按下任何键盘键（包括系统按钮，如箭头键和功能键）时发生。
+
+
+     -->
+
+</html>

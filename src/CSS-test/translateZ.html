@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="滚动视差,background-attachment:fixed,translateZ()">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Background attachment test</title>
+    <script src="../../js/jquery.js"></script>
+    <style>
+        /* 不显示滚动条，但仍可以滚动 */
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 12vh;
+        }
+
+        body {
+            perspective: 2px;
+            transform-style: preserve-3d;
+            overflow-y: scroll;
+            overflow-x: hidden;
+        }
+
+        .g-container {
+            margin: 20vh auto;
+            background: #e5e7e9;
+            width: 100%;
+            height: 150%;
+        }
+
+        .g-container .pc-one {
+            transform: translateZ(-1px);
+        }
+
+        .g-container .pc-two {
+            transform: translateZ(-2px);
+        }
+
+        .g-container .pc-three {
+            transform: translateZ(-3px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="g-container">
+        <div class="pc-one">translateZ(-1)</div>
+        <div class="pc-two">translateZ(-2)</div>
+        <div class="pc-three">translateZ(-3)</div>
+    </section>
+
+
+
+
+</body>
+
+</html>
