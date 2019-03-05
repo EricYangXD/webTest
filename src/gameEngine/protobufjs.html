@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,maximum-scale=1,minimum-scale=1,initial-scale=1,user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <title>New Page Title</title>
+    <meta name="description" content="description of website">
+    <meta name="keywords" content="keywords">
+    <!--<link rel="stylesheet" type="text/css" media="screen" />-->
+    <!--<script async src="//www.google-analytics.com/analytics.js"></script>-->
+    <!--<script type="text/javascript"></script>-->
+    <script src="//cdn.rawgit.com/dcodeIO/protobuf.js/6.8.8/dist/protobuf.js"></script>
+    <style>
+    </style>
+</head>
+
+<body>
+    <div>Google Protobuf</div>
+
+    <script>
+        // const Protobuf = require('protobufjs');
+        // protobuf.load("HMI4AD_DMS_tentative.proto", function (err, root) {
+        protobuf.load("example.proto", function (err, root) {
+            if (err) {
+                throw err;
+            }
+            console.log(`root = ${JSON.stringify(root)}`);
+
+            // Obtain a message type
+            var AwesomeMessage = root.lookupType("awesomepackage.AwesomeMessage");
+            console.log(`AwesomeMessage = ${JSON.stringify(AwesomeMessage)}`);
+
+            // Exemplary payload
+            var payload = {
+                awesomeField: "AwesomeString",
+                test: "Hello world"
+            };
+            console.log(`payload = ${JSON.stringify(payload)}`);
+
+            // Verify the payload if necessary (i.e. when possibly incomplete or invalid)
+            // var errMsg = AwesomeMessage.verify(payload);
+            // console.log(`errMsg = ${JSON.stringify(errMsg)}`);
+
+            // if (errMsg) {
+            //     throw Error(errMsg);
+            // }
+            // Create a new message
+            var message = AwesomeMessage.create(payload); // or use .fromObject if conversion is necessary
+            console.log(`message = ${JSON.stringify(message)}`);
+
+            // Encode a message to an Uint8Array (browser) or Buffer (node)
+            var buffer = AwesomeMessage.encode(message).finish();
+            // ... do something with buffer
+            console.log(`buffer = ${JSON.stringify(buffer)}`);
+
+            // Decode an Uint8Array (browser) or Buffer (node) to a message
+            var message = AwesomeMessage.decode(buffer);
+            console.log(`message = ${JSON.stringify(message)}`);
+
+            // ... do something with message
+
+            // If the application uses length-delimited buffers, there is also encodeDelimited and decodeDelimited.
+
+            // Maybe convert the message back to a plain object
+            var object = AwesomeMessage.toObject(message, {
+                longs: String,
+                enums: String,
+                bytes: String,
+                // see ConversionOptions
+                // });
+            });
+            console.log(`object = ${JSON.stringify(object)}`);
+
+            // if (err) {
+            //     throw err;
+            // }
+            // console.log("success root: " + JSON.stringify(root));
+            // const AwesomeMessage = root.lookupType("awesomepackage.AwesomeMessage");
+            // // const PBSample = root.lookupType("HMI4AD_DMS.PBSample");
+
+            // let message = AwesomeMessage.create({
+            //     EyesClosed: {
+            //         type: "number",
+            //         id: 44444
+            //     }
+            // });
+            // console.log(`message = ${JSON.stringify(message)}`);
+
+            // let buffer = AwesomeMessage.encode(message).finish();
+            // console.log(`buffer = ${Array.prototype.toString.call(buffer)}`);
+
+            // let decoded = AwesomeMessage.decode(buffer);
+            // console.log(`decoded = ${JSON.stringify(decoded)}`);
+
+        });
+    </script>
+</body>
+
+</html>

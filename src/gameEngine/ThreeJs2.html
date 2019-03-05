@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,maximum-scale=1,minimum-scale=1,initial-scale=1,user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <title>ThreeJs Game2</title>
+    <meta name="description" content="description of website">
+    <meta name="keywords" content="keywords">
+    <!--<link rel="stylesheet" type="text/css" media="screen" />-->
+    <!-- <script async src="//www.google-analytics.com/analytics.js"></script> -->
+    <script type="text/javascript" src="./js/WebGL.js"></script>
+    <script type="text/javascript" src="./js/three.js"></script>
+    <script type="text/javascript" src="./js/tween.js"></script>
+    <script src="//mrdoob.github.io/stats.js/build/stats.min.js"></script>
+
+    <style>
+        html,
+        body {
+            padding: 0;
+            margin: 0;
+            color: #808080;
+            font-family: Monospace;
+            font-size: 14px;
+            text-align: center;
+            background-color: #fff;
+            overflow: hidden;
+        }
+
+        #canvas1,#canvas2,#canvas3 {
+            position: relative;
+            display: block;
+            border: 1px solid red;
+            /* color: #fff */
+        }
+
+        #canvas1 {
+            width: 300px;
+            height: 200px;
+        }
+
+        #canvas2 {
+            width: 400px;
+            height: 100px;
+            left: 150px;
+        }
+
+        #canvas3 {
+            width: 200px;
+            height: 300px;
+            left: 75px;
+        }	
+
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <canvas id="canvas1"></canvas>
+        <canvas id="canvas2"></canvas>
+        <canvas id="canvas3"></canvas>
+    </div>
+    <script>
+        (function () {
+            var script = document.createElement('script');
+            script.onload = function () {
+                var stats = new Stats();
+                document.body.appendChild(stats.dom);
+                requestAnimationFrame(function loop() {
+                    stats.update();
+                    requestAnimationFrame(loop);
+                });
+            };
+            script.src = '//mrdoob.github.io/stats.js/build/stats.min.js';
+            document.head.appendChild(script);
+        })();
+    </script>
+
+    <script type="text/javascript" src="./js/three-test9.js"></script>
+</body>
+
+</html>
