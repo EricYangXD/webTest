@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,maximum-scale=1,minimum-scale=1,initial-scale=1,user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <title>WebRTC Test</title>
+    <meta name="description" content="WebRTC,Video">
+    <meta name="keywords" content="WebRTC">
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <style>
+        html, body{
+        margin: 0;
+        padding: 0;
+        }
+        .container{
+            width:720px;
+            margin: 0 auto;
+            border: 1px solid red;
+            overflow: hidden;
+        }
+        .cam{
+            display: block;
+            margin: 0 auto;
+            max-width: 80%;
+            width: 640px;
+            filter: blur(0px) invert(1) opacity(1.5);
+        }
+    
+    </style>
+</head>
+
+<body>
+    <h1>Realtime communication with WebRTC</h1>
+    <div id="videoCanvas">
+        <!-- autoplay字段很重要，你可以不加这个字段试试，你会发现这个video图像是不会动的，因为它只是一帧 -->
+        <video class="cam" id="camera" autoplay></video>
+        <canvas id="photo"></canvas>
+    </div>
+
+    <div id="buttons">
+        <button id="snap">Snap</button>
+    </div>
+
+    <div id="incoming">
+        <h2>Incoming photos</h2>
+        <div id="trail"></div>
+    </div>
+
+    <script type="text/javascript">
+        const mediaStreamConstraints = {
+            video: true,
+        };
+        const localVideo = document.querySelector('video');
+        let localStream;
+        // show video
+        function gotLocalMediaStream(mediaStream) {
+            localStream = mediaStream;
+            localVideo.srcObject = mediaStream;
+        }
+
+        function handleLocalMediaStreamError(error) {
+            console.log('navigator.getUserMedia error: ', error);
+        }
+        // Initializes media stream.  method 1
+        // navigator.mediaDevices.getUserMedia(mediaStreamConstraints)
+        //     .then(gotLocalMediaStream).catch(handleLocalMediaStreamError);
+
+        // --------------------------------------------------------- //
+        var video = document.getElementById('camera');
+        // 检测浏览器是getUserMedia的方法名，不同浏览器可能有不同的前缀
+        navigator.getUserMedia = navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia ||
+            navigator.msGetUserMedia;
+        // 判断浏览器是否支持WebRTC
+        if (navigator.getUserMedia) {
+            initVideo();
+        } else {
+            alert('你的浏览器不支持WebRTC');
+        }
+
+        function initVideo() {
+            navigator.getUserMedia({
+                audio: false, //音频
+                video: true
+            }, function (stream) {
+                // 将流对象暴露在全局环境，方便打印
+                window.stream = stream;
+                video.srcObject = stream;
+            }, function (error) {
+                console.log(error);
+            });
+        }
+
+        var photo = document.getElementById('photo');
+        var photoContext = photo.getContext('2d');
+        document.getElementById("snap").onclick = snapPhoto;
+
+        function snapPhoto() {
+            photoContext.drawImage(video, 0, 0, photo.width, photo.height);
+            // show(photo, sendBtn);
+        }
+
+        // function sendPhoto() {
+        //     // Split data channel message in chunks of this byte length.
+        //     var CHUNK_LEN = 64000;
+        //     var img = photoContext.getImageData(0, 0, photoContextW, photoContextH),
+        //         len = img.data.byteLength,
+        //         n = len / CHUNK_LEN | 0;
+
+        //     console.log('Sending a total of ' + len + ' byte(s)');
+        //     dataChannel.send(len);
+
+        //     // split the photo and send in chunks of about 64KB
+        //     for (var i = 0; i < n; i++) {
+        //         var start = i * CHUNK_LEN,
+        //             end = (i + 1) * CHUNK_LEN;
+        //         console.log(start + ' - ' + (end - 1));
+        //         dataChannel.send(img.data.subarray(start, end));
+        //     }
+
+        //     // send the reminder, if any
+        //     if (len % CHUNK_LEN) {
+        //         console.log('last ' + len % CHUNK_LEN + ' byte(s)');
+        //         dataChannel.send(img.data.subarray(n * CHUNK_LEN));
+        //     }
+        // }
+
+        // function receiveDataChromeFactory() {
+        //     var buf, count;
+
+        //     return function onmessage(event) {
+        //         if (typeof event.data === 'string') {
+        //             buf = window.buf = new Uint8ClampedArray(parseInt(event.data));
+        //             count = 0;
+        //             console.log('Expecting a total of ' + buf.byteLength + ' bytes');
+        //             return;
+        //         }
+        //         var data = new Uint8ClampedArray(event.data);
+        //         buf.set(data, count);
+        //         count += data.byteLength;
+        //         console.log('count: ' + count);
+        //         if (count === buf.byteLength) {
+        //             // we're done: all data chunks have been received
+        //             console.log('Done. Rendering photo.');
+        //             renderPhoto(buf);
+        //         }
+        //     };
+        // }
+
+        // function renderPhoto(data) {
+        //     var canvas = document.createElement('canvas');
+        //     canvas.width = photoContextW;
+        //     canvas.height = photoContextH;
+        //     canvas.classList.add('incomingPhoto');
+        //     // trail is the element holding the incoming images
+        //     trail.insertBefore(canvas, trail.firstChild);
+
+        //     var context = canvas.getContext('2d');
+        //     var img = context.createImageData(photoContextW, photoContextH);
+        //     img.data.set(data);
+        //     context.putImageData(img, 0, 0);
+        // }
+    </script>
+</body>
+
+</html>
