@@ -57,7 +57,7 @@ const fucArr = [
 //     trigger();
 // }
 
-// 4
+// // 4
 var run = arr => {
     const trigger = () => {
         if (arr.length === 0) return;
@@ -70,7 +70,7 @@ var run = arr => {
     });
     trigger();
 }
-// 以上4种方法的输出
+// // 以上4种方法的输出
 run(fucArr);
 
 
@@ -79,32 +79,32 @@ run(fucArr);
 // 首先给 applymiddleware（以下简称amw）一个简单的定义，
 // amw是接收若干个函数作为参数，最终会返回一个函数，
 // 这个函数调用，会按照顺序，依次执行前面作为参数传入的函数。
-const fucArr = [
-    next => action => {
-        setTimeout(() => {
-            console.log(action++);
-            next(action)
-        }, 300)
-    },
-    next => action => {
-        setTimeout(() => {
-            console.log(action++);
-            next(action)
-        }, 200)
-    },
-    next => action => {
-        setTimeout(() => {
-            console.log(action++);
-            next(action)
-        }, 100)
-    }
-]
+// const fucArr = [
+//     next => action => {
+//         setTimeout(() => {
+//             console.log(action++);
+//             next(action)
+//         }, 300)
+//     },
+//     next => action => {
+//         setTimeout(() => {
+//             console.log(action++);
+//             next(action)
+//         }, 200)
+//     },
+//     next => action => {
+//         setTimeout(() => {
+//             console.log(action++);
+//             next(action)
+//         }, 100)
+//     }
+// ]
 
-var run = arr => {
-    var reduceResult = arr.reduce((pre, next) => (...arg) => pre(next(...arg)));
-    return reduceResult(() => {});
-}
-run(fucArr)(1);
+// var run = arr => {
+//     var reduceResult = arr.reduce((pre, next) => (...arg) => pre(next(...arg)));
+//     return reduceResult(() => {});
+// }
+// run(fucArr)(1);
 
 
 // Currying
