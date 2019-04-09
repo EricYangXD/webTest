@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Html5 Recorder Test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css"> -->
+        <script src="./libmp3lame.min.js"></script>
+    </head>
+    <body>
+        <div>
+            <p>
+                由于项目需要，我们要在web端实现录音功能。一开始，找到的方案有两个，一个是通过iframe，一个是html5的getUserMedia
+                api。由于我们的录音功能不需要兼容IE浏览器，所以毫不犹豫的选择了html5提供的getUserMedia去实现。
+                基本思路是参考了官方的api文档以及网上查找的一些方案做结合做出了适合项目需要的方案。
+                但由于我们必须保证这个录音功能能够同时在pad端、pc端都可以打开，所以其中也踩了一些坑。以下为过程还原。
+            </p>
+        </div>
+
+        <script>
+            // 由于新的api是通过navigator.mediaDevices.getUserMedia，且返回一个promise。
+            // 而旧的api是navigator.getUserMedia，于是做了一个兼容性。代码如下：
+            // 老的浏览器可能根本没有实现 mediaDevices，所以我们可以先设置一个空的对象
+            if (navigator.mediaDevices === undefined) {
+                navigator.mediaDevices = {};
+            }
+
+            // 一些浏览器部分支持 mediaDevices。我们不能直接给对象设置 getUserMedia
+            // 因为这样可能会覆盖已有的属性。这里我们只会在没有getUserMedia属性的时候添加它。
+            if (navigator.mediaDevices.getUserMedia === undefined) {
+                let getUserMedia =
+                    navigator.getUserMedia ||
+                    navigator.webkitGetUserMedia ||
+                    navigator.mozGetUserMedia ||
+                    navigator.msGetUserMedia;
+                navigator.mediaDevices.getUserMedia = function(constraints) {
+                    // 首先，如果有getUserMedia的话，就获得它
+
+                    // 一些浏览器根本没实现它 - 那么就返回一个error到promise的reject来保持一个统一的接口
+                    if (!getUserMedia) {
+                        return Promise.reject(
+                            new Error(
+                                "getUserMedia is not implemented in this browser"
+                            )
+                        );
+                    }
+
+                    // 否则，为老的navigator.getUserMedia方法包裹一个Promise
+                    return new Promise(function(resolve, reject) {
+                        getUserMedia.call(
+                            navigator,
+                            constraints,
+                            resolve,
+                            reject
+                        );
+                    });
+                };
+            }
+            // 这是网上存在的一个方法，封装了一个HZRecorder。基本上引用了这个方法。
+            // 调用HZRecorder.get就可以调起录音接口，这个方法传入一个callback函数，
+            // new HZRecorder后执行callback函数且传入一个实体化后的HZRecorder对象。
+            // 可以通过该对象的方法实现开始录音、暂停、停止、播放等功能
+            var HZRecorder = function(stream, config) {
+                config = config || {};
+                config.sampleBits = config.sampleBits || 8; //采样数位 8, 16
+                config.sampleRate = config.sampleRate || 44100 / 6; //采样率(1/6 44100)
+
+                //创建一个音频环境对象
+                audioContext = window.AudioContext || window.webkitAudioContext;
+                var context = new audioContext();
+
+                //将声音输入这个对像
+                var audioInput = context.createMediaStreamSource(stream);
+
+                //设置音量节点
+                var volume = context.createGain();
+                audioInput.connect(volume);
+
+                //创建缓存，用来缓存声音
+                var bufferSize = 4096;
+
+                // 创建声音的缓存节点，createScriptProcessor方法的
+                // 第二个和第三个参数指的是输入和输出都是双声道。
+                var recorder = context.createScriptProcessor(bufferSize, 2, 2);
+
+                var audioData = {
+                    size: 0, //录音文件长度
+                    buffer: [], //录音缓存
+                    inputSampleRate: context.sampleRate, //输入采样率
+                    inputSampleBits: 16, //输入采样数位 8, 16
+                    outputSampleRate: config.sampleRate, //输出采样率
+                    oututSampleBits: config.sampleBits, //输出采样数位 8, 16
+                    input: function(data) {
+                        this.buffer.push(new Float32Array(data));
+                        this.size += data.length;
+                    },
+                    compress: function() {
+                        //合并压缩
+                        //合并
+                        var data = new Float32Array(this.size);
+                        var offset = 0;
+                        for (var i = 0; i < this.buffer.length; i++) {
+                            data.set(this.buffer[i], offset);
+                            offset += this.buffer[i].length;
+                        }
+                        //压缩
+                        var compression = parseInt(
+                            this.inputSampleRate / this.outputSampleRate
+                        );
+                        var length = data.length / compression;
+                        var result = new Float32Array(length);
+                        var index = 0,
+                            j = 0;
+                        while (index < length) {
+                            result[index] = data[j];
+                            j += compression;
+                            index++;
+                        }
+                        return result;
+                    },
+                    encodeWAV: function() {
+                        var sampleRate = Math.min(
+                            this.inputSampleRate,
+                            this.outputSampleRate
+                        );
+                        var sampleBits = Math.min(
+                            this.inputSampleBits,
+                            this.oututSampleBits
+                        );
+                        var bytes = this.compress();
+                        var dataLength = bytes.length * (sampleBits / 8);
+                        var buffer = new ArrayBuffer(44 + dataLength);
+                        var data = new DataView(buffer);
+
+                        var channelCount = 1; //单声道
+                        var offset = 0;
+
+                        var writeString = function(str) {
+                            for (var i = 0; i < str.length; i++) {
+                                data.setUint8(offset + i, str.charCodeAt(i));
+                            }
+                        };
+
+                        // 资源交换文件标识符
+                        writeString("RIFF");
+                        offset += 4;
+                        // 下个地址开始到文件尾总字节数,即文件大小-8
+                        data.setUint32(offset, 36 + dataLength, true);
+                        offset += 4;
+                        // WAV文件标志
+                        writeString("WAVE");
+                        offset += 4;
+                        // 波形格式标志
+                        writeString("fmt ");
+                        offset += 4;
+                        // 过滤字节,一般为 0x10 = 16
+                        data.setUint32(offset, 16, true);
+                        offset += 4;
+                        // 格式类别 (PCM形式采样数据)
+                        data.setUint16(offset, 1, true);
+                        offset += 2;
+                        // 通道数
+                        data.setUint16(offset, channelCount, true);
+                        offset += 2;
+                        // 采样率,每秒样本数,表示每个通道的播放速度
+                        data.setUint32(offset, sampleRate, true);
+                        offset += 4;
+                        // 波形数据传输率 (每秒平均字节数) 单声道×每秒数据位数×每样本数据位/8
+                        data.setUint32(
+                            offset,
+                            channelCount * sampleRate * (sampleBits / 8),
+                            true
+                        );
+                        offset += 4;
+                        // 快数据调整数 采样一次占用字节数 单声道×每样本的数据位数/8
+                        data.setUint16(
+                            offset,
+                            channelCount * (sampleBits / 8),
+                            true
+                        );
+                        offset += 2;
+                        // 每样本数据位数
+                        data.setUint16(offset, sampleBits, true);
+                        offset += 2;
+                        // 数据标识符
+                        writeString("data");
+                        offset += 4;
+                        // 采样数据总数,即数据总大小-44
+                        data.setUint32(offset, dataLength, true);
+                        offset += 4;
+                        // 写入采样数据
+                        if (sampleBits === 8) {
+                            for (var i = 0; i < bytes.length; i++, offset++) {
+                                var s = Math.max(-1, Math.min(1, bytes[i]));
+                                var val = s < 0 ? s * 0x8000 : s * 0x7fff;
+                                val = parseInt(255 / (65535 / (val + 32768)));
+                                data.setInt8(offset, val, true);
+                            }
+                        } else {
+                            for (
+                                var i = 0;
+                                i < bytes.length;
+                                i++, offset += 2
+                            ) {
+                                var s = Math.max(-1, Math.min(1, bytes[i]));
+                                data.setInt16(
+                                    offset,
+                                    s < 0 ? s * 0x8000 : s * 0x7fff,
+                                    true
+                                );
+                            }
+                        }
+
+                        return new Blob([data], { type: "audio/wav" });
+                    }
+                };
+
+                //开始录音
+                this.start = function() {
+                    audioInput.connect(recorder);
+                    recorder.connect(context.destination);
+                };
+
+                //停止
+                this.stop = function() {
+                    recorder.disconnect();
+                };
+
+                // 结束
+                this.end = function() {
+                    context.close();
+                };
+
+                // 继续
+                this.again = function() {
+                    recorder.connect(context.destination);
+                };
+
+                //获取音频文件
+                this.getBlob = function() {
+                    this.stop();
+                    return audioData.encodeWAV();
+                };
+
+                //回放
+                this.play = function(audio) {
+                    audio.src = window.URL.createObjectURL(this.getBlob());
+                };
+
+                //上传
+                this.upload = function(url, callback) {
+                    var fd = new FormData();
+                    fd.append("audioData", this.getBlob());
+                    var xhr = new XMLHttpRequest();
+                    if (callback) {
+                        xhr.upload.addEventListener(
+                            "progress",
+                            function(e) {
+                                callback("uploading", e);
+                            },
+                            false
+                        );
+                        xhr.addEventListener(
+                            "load",
+                            function(e) {
+                                callback("ok", e);
+                            },
+                            false
+                        );
+                        xhr.addEventListener(
+                            "error",
+                            function(e) {
+                                callback("error", e);
+                            },
+                            false
+                        );
+                        xhr.addEventListener(
+                            "abort",
+                            function(e) {
+                                callback("cancel", e);
+                            },
+                            false
+                        );
+                    }
+                    xhr.open("POST", url);
+                    xhr.send(fd);
+                };
+
+                //音频采集
+                recorder.onaudioprocess = function(e) {
+                    audioData.input(e.inputBuffer.getChannelData(0));
+                    //record(e.inputBuffer.getChannelData(0));
+                };
+            };
+
+            //抛出异常
+            HZRecorder.throwError = function(message) {
+                throw new function() {
+                    this.toString = function() {
+                        return message;
+                    };
+                }();
+            };
+            //是否支持录音
+            HZRecorder.canRecording = navigator.getUserMedia != null;
+            //获取录音机
+            HZRecorder.get = function(callback, config) {
+                if (callback) {
+                    navigator.mediaDevices
+                        .getUserMedia({ audio: true })
+                        .then(function(stream) {
+                            let rec = new HZRecorder(stream, config);
+                            callback(rec);
+                        })
+                        .catch(function(error) {
+                            HZRecorder.throwError("无法录音，请检查设备状态");
+                        });
+                }
+            };
+            window.HZRecorder = HZRecorder;
+
+            // 以上，已经可以满足大部分的需求。但是我们要兼容pad端。我们的pad有几个问题必须解决。
+            // 录音格式必须是mp3才能播放
+            // window.URL.createObjectURL传入blob数据在pad端报错，转不了
+            // 以下为解决这两个问题的方案。
+            // 以下为我实现 录音格式为mp3 和 window.URL.createObjectURL传入blob数据在pad端报错 的方案。
+            // 1、修改HZRecorder里的audioData对象代码。并引入网上一位大神的一个js文件lamejs.js
+            /**
+            const lame = new lamejs();
+            let audioData = {
+                samplesMono: null,
+                maxSamples: 1152,
+                mp3Encoder: new lame.Mp3Encoder(
+                    1,
+                    context.sampleRate || 44100,
+                    config.bitRate || 128
+                ),
+                dataBuffer: [],
+                size: 0, // 录音文件长度
+                buffer: [], // 录音缓存
+                inputSampleRate: context.sampleRate, // 输入采样率
+                inputSampleBits: 16, // 输入采样数位 8, 16
+                outputSampleRate: config.sampleRate, // 输出采样率
+                oututSampleBits: config.sampleBits, // 输出采样数位 8, 16
+                convertBuffer: function(arrayBuffer) {
+                    let data = new Float32Array(arrayBuffer);
+                    let out = new Int16Array(arrayBuffer.length);
+                    this.floatTo16BitPCM(data, out);
+                    return out;
+                },
+                floatTo16BitPCM: function(input, output) {
+                    for (let i = 0; i < input.length; i++) {
+                        let s = Math.max(-1, Math.min(1, input[i]));
+                        output[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+                    }
+                },
+                appendToBuffer: function(mp3Buf) {
+                    this.dataBuffer.push(new Int8Array(mp3Buf));
+                },
+                encode: function(arrayBuffer) {
+                    this.samplesMono = this.convertBuffer(arrayBuffer);
+                    let remaining = this.samplesMono.length;
+                    for (let i = 0; remaining >= 0; i += this.maxSamples) {
+                        let left = this.samplesMono.subarray(
+                            i,
+                            i + this.maxSamples
+                        );
+                        let mp3buf = this.mp3Encoder.encodeBuffer(left);
+                        this.appendToBuffer(mp3buf);
+                        remaining -= this.maxSamples;
+                    }
+                },
+                finish: function() {
+                    this.appendToBuffer(this.mp3Encoder.flush());
+                    return new Blob(this.dataBuffer, { type: "audio/mp3" });
+                },
+                input: function(data) {
+                    this.buffer.push(new Float32Array(data));
+                    this.size += data.length;
+                },
+                compress: function() {
+                    // 合并压缩
+                    // 合并
+                    let data = new Float32Array(this.size);
+                    let offset = 0;
+                    for (let i = 0; i < this.buffer.length; i++) {
+                        data.set(this.buffer[i], offset);
+                        offset += this.buffer[i].length;
+                    }
+                    // 压缩
+                    let compression = parseInt(
+                        this.inputSampleRate / this.outputSampleRate,
+                        10
+                    );
+                    let length = data.length / compression;
+                    let result = new Float32Array(length);
+                    let index = 0;
+                    let j = 0;
+                    while (index < length) {
+                        result[index] = data[j];
+                        j += compression;
+                        index++;
+                    }
+                    return result;
+                },
+                encodeWAV: function() {
+                    let sampleRate = Math.min(
+                        this.inputSampleRate,
+                        this.outputSampleRate
+                    );
+                    let sampleBits = Math.min(
+                        this.inputSampleBits,
+                        this.oututSampleBits
+                    );
+                    let bytes = this.compress();
+                    let dataLength = bytes.length * (sampleBits / 8);
+                    let buffer = new ArrayBuffer(44 + dataLength);
+                    let data = new DataView(buffer);
+
+                    let channelCount = 1; // 单声道
+                    let offset = 0;
+
+                    let writeString = function(str) {
+                        for (let i = 0; i < str.length; i++) {
+                            data.setUint8(offset + i, str.charCodeAt(i));
+                        }
+                    };
+
+                    // 资源交换文件标识符
+                    writeString("RIFF");
+                    offset += 4;
+                    // 下个地址开始到文件尾总字节数,即文件大小-8
+                    data.setUint32(offset, 36 + dataLength, true);
+                    offset += 4;
+                    // WAV文件标志
+                    writeString("WAVE");
+                    offset += 4;
+                    // 波形格式标志
+                    writeString("fmt ");
+                    offset += 4;
+                    // 过滤字节,一般为 0x10 = 16
+                    data.setUint32(offset, 16, true);
+                    offset += 4;
+                    // 格式类别 (PCM形式采样数据)
+                    data.setUint16(offset, 1, true);
+                    offset += 2;
+                    // 通道数
+                    data.setUint16(offset, channelCount, true);
+                    offset += 2;
+                    // 采样率,每秒样本数,表示每个通道的播放速度
+                    data.setUint32(offset, sampleRate, true);
+                    offset += 4;
+                    // 波形数据传输率 (每秒平均字节数) 单声道×每秒数据位数×每样本数据位/8
+                    data.setUint32(
+                        offset,
+                        channelCount * sampleRate * (sampleBits / 8),
+                        true
+                    );
+                    offset += 4;
+                    // 快数据调整数 采样一次占用字节数 单声道×每样本的数据位数/8
+                    data.setUint16(
+                        offset,
+                        channelCount * (sampleBits / 8),
+                        true
+                    );
+                    offset += 2;
+                    // 每样本数据位数
+                    data.setUint16(offset, sampleBits, true);
+                    offset += 2;
+                    // 数据标识符
+                    writeString("data");
+                    offset += 4;
+                    // 采样数据总数,即数据总大小-44
+                    data.setUint32(offset, dataLength, true);
+                    offset += 4;
+                    // 写入采样数据
+                    if (sampleBits === 8) {
+                        for (let i = 0; i < bytes.length; i++, offset++) {
+                            const s = Math.max(-1, Math.min(1, bytes[i]));
+                            let val = s < 0 ? s * 0x8000 : s * 0x7fff;
+                            val = parseInt(255 / (65535 / (val + 32768)), 10);
+                            data.setInt8(offset, val, true);
+                        }
+                    } else {
+                        for (let i = 0; i < bytes.length; i++, offset += 2) {
+                            const s = Math.max(-1, Math.min(1, bytes[i]));
+                            data.setInt16(
+                                offset,
+                                s < 0 ? s * 0x8000 : s * 0x7fff,
+                                true
+                            );
+                        }
+                    }
+
+                    return new Blob([data], { type: "audio/wav" });
+                }
+            };
+            // 修改HZRecord的音频采集的调用方法。
+            // 音频采集
+            recorder.onaudioprocess = function(e) {
+                audioData.encode(e.inputBuffer.getChannelData(0));
+            };
+            // HZRecord的getBlob方法。
+            this.getBlob = function() {
+                this.stop();
+                return audioData.finish();
+            };
+            // HZRecord的play方法。把blob转base64url。
+            this.play = function(func) {
+                readBlobAsDataURL(this.getBlob(), func);
+            };
+
+            function readBlobAsDataURL(data, callback) {
+                let fileReader = new FileReader();
+                fileReader.onload = function(e) {
+                    callback(e.target.result);
+                };
+                fileReader.readAsDataURL(data);
+            }
+            **/
+            //至此，已经解决以上两个问题。
+
+            // 这里主要介绍怎么做录音时的动效。我们的一个动效需求为：
+            // 根据传入的音量大小，做一个圆弧动态扩展。
+            // 创建analyser节点，获取音频时间和频率数据
+            /* 
+            const analyser = context.createAnalyser();
+            audioInput.connect(analyser);
+            const inputAnalyser = new Uint8Array(1);
+            const wrapEle = $this.refs["wrap"];
+            let ctx = wrapEle.getContext("2d");
+            const width = wrapEle.width;
+            const height = wrapEle.height;
+            const center = {
+                x: width / 2,
+                y: height / 2
+            };
+
+            function drawArc(ctx, color, x, y, radius, beginAngle, endAngle) {
+                ctx.beginPath();
+                ctx.lineWidth = 1;
+                ctx.strokeStyle = color;
+                ctx.arc(
+                    x,
+                    y,
+                    radius,
+                    (Math.PI * beginAngle) / 180,
+                    (Math.PI * endAngle) / 180
+                );
+                ctx.stroke();
+            }
+
+            (function drawSpectrum() {
+                analyser.getByteFrequencyData(inputAnalyser); // 获取频域数据
+                ctx.clearRect(0, 0, width, height);
+                // 画线条
+                for (let i = 0; i < 1; i++) {
+                    let value = inputAnalyser[i] / 3; // <===获取数据
+                    let colors = [];
+                    if (value <= 16) {
+                        colors = [
+                            "#f5A631",
+                            "#f5A631",
+                            "#e4e4e4",
+                            "#e4e4e4",
+                            "#e4e4e4",
+                            "#e4e4e4"
+                        ];
+                    } else if (value <= 32) {
+                        colors = [
+                            "#f5A631",
+                            "#f5A631",
+                            "#f5A631",
+                            "#f5A631",
+                            "#e4e4e4",
+                            "#e4e4e4"
+                        ];
+                    } else {
+                        colors = [
+                            "#f5A631",
+                            "#f5A631",
+                            "#f5A631",
+                            "#f5A631",
+                            "#f5A631",
+                            "#f5A631"
+                        ];
+                    }
+                    drawArc(
+                        ctx,
+                        colors[0],
+                        center.x,
+                        center.y,
+                        52 + 16,
+                        -30,
+                        30
+                    );
+                    drawArc(
+                        ctx,
+                        colors[1],
+                        center.x,
+                        center.y,
+                        52 + 16,
+                        150,
+                        210
+                    );
+                    drawArc(
+                        ctx,
+                        colors[2],
+                        center.x,
+                        center.y,
+                        52 + 32,
+                        -22.5,
+                        22.5
+                    );
+                    drawArc(
+                        ctx,
+                        colors[3],
+                        center.x,
+                        center.y,
+                        52 + 32,
+                        157.5,
+                        202.5
+                    );
+                    drawArc(
+                        ctx,
+                        colors[4],
+                        center.x,
+                        center.y,
+                        52 + 48,
+                        -13,
+                        13
+                    );
+                    drawArc(
+                        ctx,
+                        colors[5],
+                        center.x,
+                        center.y,
+                        52 + 48,
+                        167,
+                        193
+                    );
+                }
+
+                // 请求下一帧
+                requestAnimationFrame(drawSpectrum);
+            })();
+             */
+
+            // over
+        </script>
+    </body>
+</html>
