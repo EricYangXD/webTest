@@ -1,19 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,maximum-scale=1,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge,chrome=1">
     <title>H5 Router</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #ffffff;
+        }
+
+        .header {
+            width: 100%;
+            height: 100px;
+            background-color: rgb(198, 195, 212);
+            text-align: center;
+            line-height: 100px;
+            color: #865a5a;
+        }
+
+        .section_left {
+            width: 16%;
+            height: 500px;
+            float: left;
+            background-color: rgb(173, 145, 145);
+        }
+
+        .section_left ul li {
+            list-style: none;
+            width: 100%;
+            height: 50px;
+            border-bottom: 1px solid #ffffff;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .sidebar_right {
+            width: 84%;
+            float: right;
+            height: 500px;
+            background-color: rgb(105, 90, 90);
+            /* margin-right: 3%; */
+            /* margin-top: 15px; */
+            /* line-height: 500px; */
+            /* border-radius: 10px; */
+            color: #e6cdcd;
+            /* text-decoration: transparent; */
+            word-break: break-word;
+        }
+
+        .sidebar_right div {
+            padding: 24px 14px 0;
+        }
+
+        .footer {
+            width: 100%;
+            height: 100px;
+            background-color: rgb(190, 195, 216);
+            clear: both;
+            text-align: center;
+            line-height: 100px;
+            color: #925959;
+        }
+    </style>
 </head>
 
 <body>
-    <ul>
-        <li><a href="/">turn yellow</a></li>
-        <li><a href="/blue">turn blue</a></li>
-        <li><a href="/green">turn green</a></li>
-    </ul>
+    <header class="header">
+        <h1>我是头部</h1>
+    </header>
+    <!-- 左侧导航栏 -->
+    <section class="section_left">
+        <ul>
+            <li>
+                <a href="#/">这是默认菜单</a>
+            </li>
+            <li>
+                <a href="#/html">HTML学习</a>
+            </li>
+            <li>
+                <a href="#/css">CSS学习</a>
+            </li>
+            <li>
+                <a href="#/javascript">Javascript学习</a>
+            </li>
+        </ul>
+    </section>
+    <!-- 右侧内容显示区域 -->
+    <div class="sidebar_right">
+        <div>
+            <h1> 3. HTML5新路由方案</h1>
+            <h2> History API</h2>
+            <p> 我们可以直接在浏览器中查询出History API的方法和属性。我们只简单看一下常用的API:</p>
+            <p> window.history.back(); // 后退</p>
+            <p> window.history.forward(); // 前进</p>
+            <p> window.history.go(-3); // 后退三个页面</p>
+
+            <p>history.pushState用于在浏览历史中添加历史记录,但是并不触发跳转,此方法接受三个参数，依次为：</p>
+            <p> state:一个与指定网址相关的状态对象，popstate事件触发时，该对象会传入回调函数。如果不需要这个对象，此处可以填null。</p>
+            <p>title：新页面的标题，但是所有浏览器目前都忽略这个值，因此这里可以填null。</p>
+            <p>url：新的网址，必须与当前页面处在同一个域。浏览器的地址栏将显示这个网址。</p>
+
+            <p>history.replaceState方法的参数与pushState方法一模一样，区别是它修改浏览历史中当前纪录,而非添加记录,同样不触发跳转。</p>
+            <p>popstate事件,每当同一个文档的浏览历史（即history对象）出现变化时，就会触发popstate事件。</p>
+            <p>需要注意的是，仅仅调用pushState方法或replaceState方法 ，并不会触发该事件，只有用户点击浏览器倒退按钮和前进按钮，或者使用 JavaScript
+                调用back、forward、go方法时才会触发。</p>
+            <p>另外，该事件只针对同一个文档，如果浏览历史的切换，导致加载不同的文档，该事件也不会触发。</p>
+        </div>
+    </div>
+    <!-- 底部 -->
+    <footer class="footer">
+        <h1>我是底部</h1>
+    </footer>
+
+
+    <!-- <ul>
+            <li><a href="/">turn yellow</a></li>
+            <li><a href="/blue">turn blue</a></li>
+            <li><a href="/green">turn green</a></li>
+        </ul> -->
+
     <script>
         /* 
                 3. HTML5新路由方案

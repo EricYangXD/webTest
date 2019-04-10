@@ -1,0 +1,12 @@
+// awesome.proto
+syntax = "proto3";
+package awesomepackage;
+ 
+enum DriverPresence_e { 
+	driverpresence_false		=	0;		//
+	driverpresence_true			=	1;		//
+}
+message AwesomeMessage {
+    string awesome_field = 1; // becomes awesomeField
+	DriverPresence_e	DriverPresence	=	2;
+}
