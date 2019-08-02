@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Realtime communication with WebRTC</title>
+
+        <style>
+            .none {
+                -webkit-filter: none;
+            }
+
+            .blur {
+                -webkit-filter: blur(3px);
+            }
+
+            .grayscale {
+                -webkit-filter: grayscale(1);
+            }
+
+            .invert {
+                -webkit-filter: invert(1);
+            }
+
+            .sepia {
+                -webkit-filter: sepia(1);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Realtime communication with WebRTC</h1>
+        <div>
+            <img src="./webrtc-flow.png" width="800" alt="#" />
+        </div>
+        <div>
+            <img src="./getUserMediaApi.png" width="800" alt="#" />
+        </div>
+        <video autoplay playsinline id="player"></video>
+
+        <video id="recvideo"></video>
+
+        <video autoplay playsinline id="deskVideo"></video>
+
+        <div>
+            <button id="TakePhoto">Take</button>
+            <canvas id="picture"></canvas>
+            <button id="save">保存</button>
+            <button id="record">Start Record</button>
+        </div>
+
+        <button id="record">Start Record</button>
+        <button id="recplay" disabled>Play</button>
+        <button id="download" disabled>Download</button>
+
+        <select id="filter">
+            <option value="none">None</option>
+            <option value="blur">blur</option>
+            <option value="grayscale">Grayscale</option>
+            <option value="invert">Invert</option>
+            <option value="sepia">sepia</option>
+        </select>
+        <script src="./client.js"></script>
+    </body>
+</html>
