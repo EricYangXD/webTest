@@ -41,28 +41,14 @@
                 <li>内容</li>
             </ul>
         </div>
-
-        <!-- <div>
-
-            2017.06–至今 产险2016版卡雁电子卡片定制系统 项目职务：项目经理兼开发 所在公司：中国太平洋保险(集团)股份有限公司 项目简介： 该项目意在打造一个集产品宣传、营销和数据采集为一体的平台，将产品的宣传文案制作成H5动画，营销员通过微信等平台直接分发给客户，客户通过H5动画后面的链接可以直接购买产品，同时也具有发送节日贺卡和统计浏览数据等功能。 项目职责： 负责制定工作计划、分析业务需求、分配开发任务和部分前台及后台开发工作。 项目业绩： 半年以来，平台中卡片的生成数量超过10万张和浏览量超过50万次。
-            2016.06–至今 产险2012版移动承保系统-新版手机版车E保 项目职务：前端开发 所在公司：中国太平洋保险(集团)股份有限公司 项目简介： 该项目是手机版车E保项目的二期，对老版本车E保进行了全面的更新，使用seajs作为前端框架重新做了一个单页应用。对原来的投保页面做了精简，具体流程、功能基本保持不变。 技术细节： seajs做模块加载，使用cordova连通前端H5和native容器，doT.js做模板引擎，使用JQuery、MUI、Zepto等库，HBuilder打包。
-            项目职责： 在项目开发初期负责投保流程页面和部分模块的开发，中后期主要负责跟进日常需求的完成。 项目业绩： 进一步提升了自己的技术水平，通过与领导同事的沟通，学习了部分项目管理的经验。该项目目前出单量比较稳定。 2016.11–2017.05 产险2012版移动承保系统-手机版财富U保 项目职务：开发 所在公司：中国太平洋保险(集团)股份有限公司 项目简介： 移动销售端的非车险业务出单应用，主要用于小微保、码上保、行业保等产品的出单，同时也是个别系统的入口之一。 项目职责：
-            负责部分页面的开发和功能模块的开发维护工作。 项目业绩： 学习了部分项目管理的经验。该项目目前出单量比较稳定。 2015.07–2016.06 产险2012版移动承保系统-手机版车E保 项目职务：前端开发 所在公司：中国太平洋保险(集团)股份有限公司 项目简介： 手机版车E保项目一期，用于手机端车险投保，采用hybrid模式开发的一个多页应用，使用cordova连接原生应用壳和html5页面，html页面使用了zepto和JQuery等库，主要页面包含车险投保的具体流程，采用了第三方的电子签名、OCR识别等技术。
-            项目职责： 负责投保流程页面的开发和维护工作，完成日常需求。 项目业绩： 作为新人，比较全面的了解了车险投保的具体流程和部分规则，更重要的是让自己的技术得到了实践和提升。该项目一期的出单保费超过2亿，用户（营销员）反映较好。 个人技能：熟悉Vue.js，熟练使用HTML5、CSS3、JavaScript等，熟悉ES6，熟悉MySQL。
-
-
-        </div> -->
-
-
-
     </div>
     <script>
         $(function() {
             //拼接url
-            var hreftemp = "http://kayantest.cpic.com.cn/ky/taihaobao/index.html";
+            var hreftemp = "http://www.baidu.com/ky/taihaobao/index.html";
             var baseurl = hreftemp.substring(0, hreftemp.indexOf("/ky/") + 4);
             //var userid=sessionStorage.getItem("userid");
-            var searchurl = decodeURI("http://kayantest.cpic.com.cn/ky/taihaobao/cardlist.html?userid=3110100|999||8ce6b73ad2118782e5f2034cad2bb8a4|23|%E4%B8%AA%E4%BA%BA%E8%90%A5%E9%94%80|TZZ|%E4%B8%AD%E5%9B%BD%E5%A4%AA%E5%B9%B3%E6%B4%8B%E4%BF%9D%E9%99%A9%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%8B%8F%E5%B7%9E%E5%88%86%E5%85%AC%E5%8F%B8|TZW000647|%E9%92%B1%E6%83%A0%E8%8A%B1");
+            var searchurl = decodeURI("http://www.baidu.com/ky/taihaobao/cardlist.html?userid=3110100|999||8ce6b73ad2118782e5f2034cad2bb8a4|23|%E4%B8%AA%E4%BA%BA%E8%90%A5%E9%94%80|TZZ|%E4%B8%AD%E5%9B%BD%E5%A4%AA%E5%B9%B3%E6%B4%8B%E4%BF%9D%E9%99%A9%E8%82%A1%E4%BB%BD%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8%E8%8B%8F%E5%B7%9E%E5%88%86%E5%85%AC%E5%8F%B8|TZW000647|%E9%92%B1%E6%83%A0%E8%8A%B1");
             var postinfo = searchurl.substring(searchurl.indexOf("userid=") + 7);
             var arr = postinfo.split("|");
             var arr1 = postinfo.split("|", 3);
@@ -87,7 +73,7 @@
             //     localStorage.setItem("responseData", response.data);
             // }
             // var script = document.createElement('script');
-            // counturl = "http://kayantest.cpic.com.cn/ky/thbcard/count/3110100|999|"
+            // counturl = "http://www.baidu.com/ky/thbcard/count/3110100|999|"
             // script.src = counturl + encodeURIComponent('?callback=handleResponse');
             // document.body.insertBefore(script, document.body.firstChild);
 
@@ -96,7 +82,7 @@
             // axios.get(counturl, {
 
             //         headers: {
-            //             referer: 'http://kayantest.cpic.com.cn/ky/taihaobao/cardlist.html?userid=3110100|999|',
+            //             referer: 'http://www.baidu.com/ky/taihaobao/cardlist.html?userid=3110100|999|',
             //             host: 'kayantest.cpic.com.cn'
             //         }
             //     })
